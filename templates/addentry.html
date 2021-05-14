@@ -1,0 +1,25 @@
+<div class="col-5">
+
+  {% if isDOICreated %}
+    <div class="alert alert-success" role="alert">
+      The entry is created!
+    </div>
+  {% endif %}
+  {% if isDOIExist %}
+    <div class="alert alert-warning" role="alert">
+      The DOI already exists!
+    </div>
+  {% endif %}
+
+  <form action="/addentry" method="post">
+    {% csrf_token %}
+    {{ form_doi }}
+    <input type="submit" value="Submit">
+  </form>
+
+
+</div>
+
+<div class="col-5">
+  add field
+</div>

@@ -1,0 +1,151 @@
+<div class="table-responsive">
+  <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="tableList">
+    <thead>
+      <tr>
+        <th width="0px"></th>
+        <th width="40px">File</th>
+        <th width="200px">Authors</th>
+        <th width="350px">Title</th>
+        <th width="70px">Date</th>
+        <th width="200px">Journal</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for ref_i in refs %}
+      <tr>
+        <td id="appadd">{{ ref_i }} </td>
+        <td id="appadd">
+        {% if ref_i.mainFile %}
+        <a type="button" href="{{ "media/"|add:ref_i.mainFile.name }}" target="_blank">
+          <i class="far fa-file-pdf"></i>
+        </a>
+        {% endif %}
+        </td>
+        <td id="appadd">{{ ref_i.getAuthors_list }}</td>
+        <td id="appadd">{{ ref_i.getTitle }}</td>
+        <td id="appadd">{{ ref_i.getDate }}</td>
+        <td id="appadd">{{ ref_i.getJournal }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+To delete:
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Age</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Sex</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Anna</td>
+        <td>Pitt</td>
+        <td>35</td>
+        <td>New York</td>
+        <td>USA</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+      </tr>
+      <tr class="table-success">
+        <td>1</td>
+        <td>Anna</td>
+        <td>Pitt</td>
+        <td>35</td>
+        <td>New York</td>
+        <td>USA</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Anna</td>
+        <td>Pitt</td>
+        <td>35</td>
+        <td>New York</td>
+        <td>USA</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Anna</td>
+        <td>Pitt</td>
+        <td>35</td>
+        <td>New York</td>
+        <td>USA</td>
+        <td>Female</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>Yes</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
