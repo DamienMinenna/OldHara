@@ -41,11 +41,11 @@
         }
 
         .btn-default{
-            /* background-color: #A1B4DC; */
+            background-color: #A1B4DC;
             color: black;             
             border-color: #7584A3;
-            background: -webkit-linear-gradient(to bottom, #B2C7F4, #93A5CB);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom, #B2C7F4, #93A5CB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */         
+            /* background: -webkit-linear-gradient(to bottom, #B2C7F4, #93A5CB);  /* Chrome 10-25, Safari 5.1-6 */
+            /* background: linear-gradient(to bottom, #B2C7F4, #93A5CB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */          */ */
             border: 3px solid #7584A3;
           }
              
@@ -70,27 +70,19 @@
           <span class="titlefont">  The open-source reference management software </span>
         </div>
 
-        <div class="container-fluid p-3 mb-2 bg-header2">
-          <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group btn-group-sm" role="group">
-              &nbsp &nbsp &nbsp &nbsp
-              <button type="button" class="btn btn-default btn-lg text-center">
-                <span class="fas fa-cog"></span><br>Settings</button>
-              <a href="addentry" class="btn btn-default btn-lg text-center">
-                <span class="fas fa-file-upload"></span><br>Add entry</a>
-              <a href="addfolder" class="btn btn-default btn-lg text-center">
-                <span class="fas fa-folder-plus"></span><br>Add folder</a>
-              <button type="button" class="btn btn-default btn-lg text-center">
-                <span class="fas fa-question-circle"></span><br>Help</button>
-            </div>
-            <div class="input-group">
-              <div class="input-group-text" id="btnGroupAddon"><i class="fas fa-search"></i></div>
-              <input type="text" class="form-control" placeholder="Not working!" aria-describedby="btnGroupAddon">
-              &nbsp &nbsp &nbsp &nbsp
-            </div>
-          </div>
-        </div>
+        <nav class="navbar sticky-top bg-title flex-md-nowrap p-0">
+          <button type="button" class="btn btn-default text-center">
+            <span class="fas fa-cog"></span><br>Settings</button>
+          <a href="addentry" class="btn btn-default text-center">
+            <span class="fas fa-file-upload"></span><br>Add entry</a>
+          <a href="addfolder" class="btn btn-default text-center">
+            <span class="fas fa-folder-plus"></span><br>Add folder</a>
 
+
+          <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
+          <button type="button" class="btn btn-default text-center">
+            <span class="fas fa-question-circle"></span><br>Help</button>
+        </nav>
 
         {% block content %}
         <!-- Content Goes here -->
@@ -118,6 +110,8 @@
           crossorigin="anonymous">
         </script>
 
+
+
         <script>
 
           $("#tableList").on('click','tr',function()  {
@@ -133,8 +127,11 @@
               },
               dataType: 'json',
               success: function (data) {
-                dic_selected = JSON.parse(data.obj);
-                $('#details').html(dic_selected);
+                let html;
+                for (let key in data)  {
+                  html += key + ': ' + data[key] +'<br>'
+                }
+                $('#details').html(html);
               }
             });
 
