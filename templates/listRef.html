@@ -8,12 +8,14 @@
         <th width="350px">Title</th>
         <th width="70px">Date</th>
         <th width="200px">Journal</th>
+        <th width="200px">test</th>
       </tr>
     </thead>
     <tbody>
     {% for ref_i in refs %}
       <tr>
-        <td id="appadd">{{ ref_i }} </td>
+        <td id="appadd">{{ ref_i.json_payload }} </td>
+        <!-- <td id="appadd">{{ ref_i }} </td> -->
         <td id="appadd">
         {% if ref_i.mainFile %}
         <a type="button" href="{{ "media/"|add:ref_i.mainFile.name }}" target="_blank">
@@ -25,6 +27,7 @@
         <td id="appadd">{{ ref_i.getTitle }}</td>
         <td id="appadd">{{ ref_i.getDate }}</td>
         <td id="appadd">{{ ref_i.getJournal }}</td>
+        <td id="appadd">{{ ref_i.data.status }}</td>
       </tr>
     {% endfor %}
     </tbody>

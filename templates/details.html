@@ -1,44 +1,8 @@
 
   <br>
 
-  <ul class="list-group">
-    {% for key, value in dic_selected.items %}
-      <li class="list-group-item">{{key}}: {{value}}</li>
-    {% endfor %}
+  <ul class="list-group" id="details">
 
-  <li class="list-group-item">................</li>
-  <li class="list-group-item">Type: {{ ref_selected.getType }}</li>
-  <li class="list-group-item"><b>Title: {{ ref_selected.getTitle }}</b></li>
-  <li class="list-group-item">Authors: {{ ref_selected.getAuthors }}</li>
-  <li class="list-group-item">Journal: {{ ref_selected.getJournal }}</li>
-  <li class="list-group-item">Date: {{ ref_selected.getDate }}</li>
+    Select an item
 
-
-  <li class="list-group-item">Volume: {{ ref_selected.getVolume }}</li>
-  <li class="list-group-item">Issue: {{ ref_selected.getIssue }}</li>
-
-  <li class="list-group-item">Pages:
-    {% if not ref_selected.getPage == '' %}
-    {{ ref_selected.getPage }}
-    {% endif %}
-  </li>
-
-  <li class="list-group-item">Article Number:
-    {% if not ref_selected.getArticleNumber == '' %}
-    {{ ref_selected.getArticleNumber }}
-    {% endif %}
-  </li>
-
-  <li class="list-group-item">DOI: {{ ref_selected.getDOI }}</li>
-
-  <li class="list-group-item">Abstract: {{ ref_selected.abstract }}</li>
-  <li class="list-group-item">Keywords: {{ ref_selected.keyword }}</li>
-  <li class="list-group-item">File:
-    {% if ref_selected.mainFile %}
-    <a type="button" href="{{ "media/"|add:ref_selected.mainFile.name }}" target="_blank">
-    <i class="far fa-file-pdf"></i></a>
-    {% endif %}
-  </li>
-
-
-</ul>
+  </ul>

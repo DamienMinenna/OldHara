@@ -73,16 +73,47 @@
         <nav class="navbar sticky-top bg-title flex-md-nowrap p-0">
           <button type="button" class="btn btn-default text-center">
             <span class="fas fa-cog"></span><br>Settings</button>
-          <a href="addentry" class="btn btn-default text-center">
-            <span class="fas fa-file-upload"></span><br>Add entry</a>
-          <a href="addfolder" class="btn btn-default text-center">
-            <span class="fas fa-folder-plus"></span><br>Add folder</a>
-
+          <button type="button" href="addentry" class="btn btn-default text-center" data-toggle="modal" data-target="#ModaladdDOI">
+            <span class="fas fa-file-upload"></span><br>Add doi</button>
 
           <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
           <button type="button" class="btn btn-default text-center">
             <span class="fas fa-question-circle"></span><br>Help</button>
         </nav>
+
+        <div class="modal fade" id="ModaladdDOI" tabindex="-1" role="dialog" aria-labelledby="ModaladdDOILabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="ModaladdDOILabel">Add a new entry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                {% if isDOICreated %}
+                  <div class="alert alert-success" role="alert">
+                    The entry is created!
+                  </div>
+                {% endif %}
+                {% if isDOIExist %}
+                  <div class="alert alert-warning" role="alert">
+                    The DOI already exists!
+                  </div>
+                {% endif %}
+
+                <form action="/" method="post">
+                  {% csrf_token %}
+                  {{ form_doi }}
+                  <input type="submit" value="Submit">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {% block content %}
         <!-- Content Goes here -->
@@ -109,10 +140,86 @@
           integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
           crossorigin="anonymous">
         </script>
-
-
+        <script async src='https://badge.dimensions.ai/badge.js' charset='utf-8'></script>
+        <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
 
         <script>
+
+        var isModalAF = {{ isModaladdfolder|yesno:"true,false" }}
+        if (isModalAF) {
+          $('#Modaladdfolder').modal('show');
+        }
+
+        var isModalD = {{ isModaladdDOI|yesno:"true,false" }}
+        if (isModalD) {
+          $('#ModaladdDOI').modal('show');
+        }
+
+        </script>
+
+        <script>
+
+          function getAuthors(data) {
+            let authors;
+            if (typeof data['message']['author'] != "undefined") {
+              for(var key in data['message']['author']){
+                authors +=  data['message']['author'][key]['given'] + ' ' + data['message']['author'][key]['family'] + ', '
+              }
+              return authors.slice(0, -2).substring(9);
+            }
+            return "undefined"
+          }
+
+          function getTitle(data) {
+            if (typeof data['message']['container-title'] != "undefined") {
+              return data['message']['container-title'][0];
+            }
+            return "undefined";
+          }
+
+          function getDate(data) {
+            if (typeof data['message']['issued'] != "undefined") {
+              if (typeof data['message']['issued']['date-parts'] != "undefined") {
+                  return data['message']['issued']['date-parts'];
+              }
+            }
+            return "undefined";
+          }
+
+          $("#tableList").on('click', 'tr', function()  {
+            var data = $(this).find('td:first-child').text();
+            // console.log(typeof data);
+            try {
+              data = JSON.parse(data)
+              // console.log(data);
+              let html;
+              html = " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
+              + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
+              + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
+              + "<li class='list-group-item'>Journal: " + getTitle(data) + "</li> "
+              + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
+              + "<li class='list-group-item'>Volume: " + data['message']['volume'] + "</li> "
+              + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
+              + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
+              + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
+              + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
+              + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
+              + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
+              + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> ";
+
+              $('#details').html(html);
+              window.__dimensions_embed.addBadges()
+              _altmetric_embed_init();
+            } catch (error) {
+              console.error('no json');
+              $('#details').html('Select an item');
+              window.__dimensions_embed.addBadges()
+              _altmetric_embed_init();
+            }
+          });
+        </script>
+
+        <!-- <script>
 
           $("#tableList").on('click','tr',function()  {
             var id = $(this).find("td:first-child").text();
@@ -128,15 +235,18 @@
               dataType: 'json',
               success: function (data) {
                 let html;
-                for (let key in data)  {
-                  html += key + ': ' + data[key] +'<br>'
-                }
+                // for (let key in data)  {
+                //   html += key + ': ' + data[key] +'<br>'
+                // }
+                html = " <li class='list-group-item'>Title: <b>" + data['Title'] + "</b></li>"
+                +"<li class='list-group-item'>Authors: " + data['Authors'] + "</li> ";
+
                 $('#details').html(html);
               }
             });
 
           });
-        </script>
+        </script> -->
 
 
     </body>

@@ -62,7 +62,7 @@ class Ref(models.Model):
 
     data = models.JSONField(null=True)
     title = models.TextField()
-
+    json_payload = models.TextField(blank=True)
 
 
     # authors = models.TextField(blank=True) # A modifier

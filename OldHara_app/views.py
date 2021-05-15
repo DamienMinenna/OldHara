@@ -14,46 +14,114 @@ from .forms import addfolderForm, addDOIForm
 
 def view_home(request):
     template_name = 'index.html'
-    id_selected = 0
+
+    isCreated = False
+    isExist = False
+    isModaladdfolder = False
+    isDOICreated = False
+    isDOIExist = False
+    isModaladdDOI = False
+    if request.method == 'POST':
+
+        if 'nameFolder' in request.POST:
+            # create a form instance and populate it with data from the request:
+            form_addfolder = addfolderForm(request.POST)
+            form_doi = addDOIForm()
+            # check whether it's valid:
+            if form_addfolder.is_valid():
+
+                nameFolder = request.POST['nameFolder']
+                path = str('media/') + nameFolder
+
+                if not os.path.exists(path):
+                    os.mkdir(path)
+
+                    b = Path_Ref(path=nameFolder)
+                    b.save()
+
+                    isCreated = True
+                else:
+                    isExist = True
+                isModaladdfolder = True
+
+        elif 'nameDOI' in request.POST:
+            # create a form instance and populate it with data from the request:
+            form_doi = addDOIForm(request.POST)
+            form_addfolder = addfolderForm()
+
+            # check whether it's valid:
+            if form_doi.is_valid():
+                nameDOI = str(request.POST['nameDOI']).lower()
+                refs = Ref.objects.all()
+
+                for ref_i in refs:
+                    refidoi = ref_i.getDOI()
+
+                    if refidoi == nameDOI:
+                        isDOIExist = True
+
+                if not isDOIExist:
+                        crossrefurl = 'https://api.crossref.org/v1/works/' + nameDOI
+                        r = requests.get(crossrefurl)
+
+                        if r.status_code == 200:
+                            d = json.loads(r.text)
+                            title_newentry = str(d['message']['title'][0])
+                            c = Ref(
+                                title = title_newentry,
+                                data = d,
+                                json_payload = r.text
+                            )
+                            c.save()
+
+                        else:
+                            dico_1 = {}
+                            dico_1["status"] = "ok"
+                            dico_1["DOI"] = nameDOI
+                            dico_2 = {}
+                            dico_2["message"] = dico_1
+                            c = Ref(
+                                title = nameDOI,
+                                data = dico_2,
+                                json_payload = json.dumps(dico_2)
+                            )
+                            c.save()
+
+                        isDOICreated = True
+                        isModaladdDOI = True
+
+        else:
+            form_addfolder = addfolderForm()
+            form_doi = addDOIForm()
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form_addfolder = addfolderForm()
+        form_doi = addDOIForm()
 
     refs = Ref.objects.order_by('-created_on')
-    ref_selected = Ref.objects.all()[id_selected]
     paths = Path_Ref.objects.order_by('path')
-
-    dic_selected = {}
-    dic_selected['Title'] = ref_selected.getTitle()
-    dic_selected['Authors'] = ref_selected.getAuthors()
 
     return render(request, template_name,{
         'refs' : refs,
-        'dic_selected' : dic_selected,
-        'ref_selected' : ref_selected,
+        'form_addfolder' : form_addfolder,
         'paths': paths,
         'page': 'home',
+        'isCreated': isCreated,
+        'isExist': isExist,
+        'isModaladdfolder': isModaladdfolder,
+        'form_doi': form_doi,
+        'isDOICreated': isDOICreated,
+        'isDOIExist': isDOIExist,
+        'isModaladdDOI' : isModaladdDOI
         })
 
-def select_list(request):
-    template_name = 'index.html'
-    dic_selected = {}
-    if request.is_ajax() and request.method == 'GET':
-        if 'id' in request.GET:
-            ref_wanted = str(request.GET['id'])[:-1]
-            # for i in Ref.objects.all():
-            for i in range(Ref.objects.all().count()):
-                if str(Ref.objects.all()[i]) == ref_wanted:
-                    id_selected = i
-                    print('I have it!!')
 
-                    ref_selected = Ref.objects.all()[id_selected]
 
-                    dic_selected['Title'] = ref_selected.getTitle()
-                    dic_selected['Authors'] = ref_selected.getAuthors()
 
-    # return JsonResponse(response, status=200)
-    # html = render_to_string(template_name, dic_selected)
-    # return HttpResponse(html)
 
-    return JsonResponse(dic_selected)
+
 
 def view_addfolder(request):
     template_name = 'index.html'
@@ -82,7 +150,6 @@ def view_addfolder(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = addfolderForm()
-
 
     paths = Path_Ref.objects.order_by('path')
 
@@ -126,7 +193,7 @@ def view_addentry(request):
             if not isDOIExist:
 
                     crossrefurl = 'https://api.crossref.org/v1/works/' + nameDOI
-                    print(crossrefurl)
+
                     r = requests.get(crossrefurl)
 
                     if r.status_code == 200:
@@ -134,7 +201,11 @@ def view_addentry(request):
                         d = json.loads(r.text)
 
                         title_newentry = str(d['message']['title'][0])
-                        c = Ref(title = title_newentry,data=d)
+                        c = Ref(
+                            title = title_newentry,
+                            data = d,
+                            json_payload = r.text
+                        )
                         c.save()
 
                     else:
