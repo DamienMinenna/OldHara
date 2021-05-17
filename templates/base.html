@@ -94,11 +94,25 @@
                 {% if isDOICreated %}
                   <div class="alert alert-success" role="alert">
                     The entry is created!
+                    <br>
+                    <br>
+                    Title: {{ refs.0.getTitle }}
+                    <br>
+                    Authors: {{ refs.0.getAuthors_list }}
+                    <br>
+                    Journal: {{ refs.0.getJournal }}
+                    <br>
+                    Date: {{ refs.0.getDate }}
                   </div>
                 {% endif %}
                 {% if isDOIExist %}
                   <div class="alert alert-warning" role="alert">
                     The DOI already exists!
+                  </div>
+                {% endif %}
+                {% if isDOInotValid %}
+                  <div class="alert alert-danger" role="alert">
+                    Cannot retrive a database for this DOI! Check the DOI validity.
                   </div>
                 {% endif %}
 
@@ -170,7 +184,18 @@
             return "undefined"
           }
 
-          function getTitle(data) {
+          function getAuthors_table(data) {
+            let authors;
+            if (typeof data['message']['author'] != "undefined") {
+              for(var key in data['message']['author']){
+                authors +=  data['message']['author'][key]['family'] + ', ' + data['message']['author'][key]['given'] + '; '
+              }
+              return authors.slice(0, -2).substring(9);
+            }
+            return ""
+          }
+
+          function getJournal(data) {
             if (typeof data['message']['container-title'] != "undefined") {
               return data['message']['container-title'][0];
             }
@@ -186,6 +211,15 @@
             return "undefined";
           }
 
+          function getDate_table(data) {
+            if (typeof data['message']['issued'] != "undefined") {
+              if (typeof data['message']['issued']['date-parts'] != "undefined") {
+                  return data['message']['issued']['date-parts'][0][0];
+              }
+            }
+            return "";
+          }
+
           $("#tableList").on('click', 'tr', function()  {
             var data = $(this).find('td:first-child').text();
             // console.log(typeof data);
@@ -193,10 +227,11 @@
               data = JSON.parse(data)
               // console.log(data);
               let html;
-              html = " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
+              html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
+              + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
               + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
               + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
-              + "<li class='list-group-item'>Journal: " + getTitle(data) + "</li> "
+              + "<li class='list-group-item'>Journal: " + getJournal(data) + "</li> "
               + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
               + "<li class='list-group-item'>Volume: <div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div> </li> "
               + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
@@ -211,6 +246,40 @@
               $('#details').html(html);
               window.__dimensions_embed.addBadges()
               _altmetric_embed_init();
+
+
+              document.getElementById("editVolume").addEventListener("input", function() {
+                  var volume = $('#editVolume').html();
+                  // console.log("Volume modified");
+
+
+
+                  $.ajax({
+                    synch: 'true',
+                    url: '{% url 'modify_volume' %}',
+                    type: 'POST',
+                    data: {
+                      'id': data['OldHara']['id'],
+                      'volume': volume,
+                    },
+                    dataType: 'json',
+                    success: function (responseData) {
+                      let html_table;
+                      html_table = "<td id='appadd'>" + JSON.stringify(responseData) + "</td>"
+                      + "<td id='appadd'></td>"
+                      + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
+                      + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
+                      + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
+                      + "<td id='appadd'>" + getJournal(responseData) + "</td>"
+                      + "<td id='appadd'></td>";
+
+                      $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    }
+                  });
+
+              }, false);
+
+
             } catch (error) {
               console.error('no json');
               $('#details').html('Select an item');
@@ -249,14 +318,6 @@
           });
         </script> -->
 
-        <script>
-          var editV = document.getElementById('editVolume');
-          if(editV){
-            document.getElementById("editVolume").addEventListener("input", function() {
-                console.log("input event fired");
-            }, false);
-          };
-        </script>
 
     </body>
 </html>

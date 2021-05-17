@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     {% for ref_i in refs %}
-      <tr>
+      <tr id="listRef_{{ ref_i.id }}">
         <td id="appadd">{{ ref_i.json_payload }} </td>
         <!-- <td id="appadd">{{ ref_i }} </td> -->
         <td id="appadd">
@@ -27,7 +27,7 @@
         <td id="appadd">{{ ref_i.getTitle }}</td>
         <td id="appadd">{{ ref_i.getDate }}</td>
         <td id="appadd">{{ ref_i.getJournal }}</td>
-        <td id="appadd">{{ ref_i.data.status }}</td>
+        <td id="appadd">{{ ref_i.data.status }} {{ ref_i.id }} </td>
       </tr>
     {% endfor %}
     </tbody>

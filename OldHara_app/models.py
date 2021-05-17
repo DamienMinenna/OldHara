@@ -23,38 +23,14 @@ TYPE = (
     (9,"Other"),
 )
 
-# class Author(models.Model):
-#     firstname = models.CharField(max_length=200,blank=True)
-#     lastname = models.CharField(max_length=200,blank=True)
-#
-#     def __str__(self):
-#         return self.lastname
 
-
-class Path_Ref(models.Model):
+class Path_Biblio(models.Model):
     path = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.path
 
 class Biblio(models.Model):
-    title = models.TextField() #models.CharField(max_length=1000)
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=STATUS, default=0)
-    type = models.IntegerField(choices=TYPE, default=0)
-    data = models.JSONField(null=True)
-    doi = models.TextField(blank=True)
-    url = models.URLField(blank=True)
-    keyword = models.TextField(blank=True)
-    abstract = models.TextField(blank=True)
-
-    mainFile = models.FileField(upload_to='_toSort/',blank=True)
-
-    def __str__(self):
-        return self.title
-
-
-
-class Ref(models.Model):
     # slug = models.SlugField(max_length=200, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
@@ -63,6 +39,8 @@ class Ref(models.Model):
     data = models.JSONField(null=True)
     title = models.TextField()
     json_payload = models.TextField(blank=True)
+
+    folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
 
 
     # authors = models.TextField(blank=True) # A modifier
@@ -78,7 +56,7 @@ class Ref(models.Model):
     keyword = models.TextField(blank=True)
     abstract = models.TextField(blank=True)
 
-    mainFile = models.FileField(upload_to='_toSort/',blank=True)
+    mainFile = models.FileField(upload_to='toSort/',blank=True)
 
     # os.rename(model.mainFile.path, new_path)
     # model.mainFile.name = new_name
