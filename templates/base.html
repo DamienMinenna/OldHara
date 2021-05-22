@@ -79,6 +79,8 @@
           <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
           <button type="button" class="btn btn-default text-center">
             <span class="fas fa-question-circle"></span><br>Help</button>
+          <a href="https://github.com/DamienMinenna/OldHara" target="_blank" class="btn btn-default text-center">
+            <span class="fab fa-github-square"></span><br> &zwnj; </a>
         </nav>
 
         <div class="modal fade" id="ModaladdDOI" tabindex="-1" role="dialog" aria-labelledby="ModaladdDOILabel" aria-hidden="true">
@@ -220,12 +222,24 @@
             return "";
           }
 
+          function change_table(responseData) {
+            let html
+            html = "<td id='appadd'>" + JSON.stringify(responseData) + "</td>"
+            + "<td id='appadd'></td>"
+            + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
+            + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
+            + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
+            + "<td id='appadd'>" + getJournal(responseData) + "</td>"
+            + "<td id='appadd'></td>";
+            return html
+          }
+
           $("#tableList").on('click', 'tr', function()  {
             var data = $(this).find('td:first-child').text();
             // console.log(typeof data);
             try {
               data = JSON.parse(data)
-              // console.log(data);
+
               let html;
               html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
               + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
@@ -239,8 +253,9 @@
               + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
               + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
               + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
-              // + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
-              // + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
+              + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
+              + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
+              + "<li class='list-group-item'>Folder: <div id='editFolder'>" + data['OldHara']['folder'] + "</div> </li> "
               + " ";
 
               $('#details').html(html);
@@ -250,10 +265,6 @@
 
               document.getElementById("editVolume").addEventListener("input", function() {
                   var volume = $('#editVolume').html();
-                  // console.log("Volume modified");
-
-
-
                   $.ajax({
                     synch: 'true',
                     url: '{% url 'modify_volume' %}',
@@ -265,19 +276,55 @@
                     dataType: 'json',
                     success: function (responseData) {
                       let html_table;
-                      html_table = "<td id='appadd'>" + JSON.stringify(responseData) + "</td>"
-                      + "<td id='appadd'></td>"
-                      + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
-                      + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
-                      + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
-                      + "<td id='appadd'>" + getJournal(responseData) + "</td>"
-                      + "<td id='appadd'></td>";
-
+                      html_table = change_table(responseData);
                       $("#listRef_"+data['OldHara']['id']).html(html_table);
                     }
                   });
 
               }, false);
+
+              var folder_list = {{ folder_list|safe }}
+              $( "#editFolder" ).one( "click", function() {
+                let html_folderlist;
+
+                html_folderlist = "<form action='' method='POST' id='formSelectFolder'>"
+                    + '{% csrf_token %}'
+                    + "<select id='selectFolder' name='folder' onchange='this.form.submit()'>"
+                    + "<option value='" + data['OldHara']['folder'] + "'>" + data['OldHara']['folder'] + "</option>";
+                for(i = 0; i < folder_list.length; i++){
+                  if(!(folder_list[i] == data['OldHara']['folder'])){
+                    html_folderlist += "<option value='" + folder_list[i] + "'>" + folder_list[i] + "</option>"
+                  }
+                };
+                html_folderlist += "</select></form>"
+                $("#editFolder").html(html_folderlist);
+
+                $(document).ready(function(e) {
+                  $("[name='folder']").on('change', function() {
+                    $.ajax({
+                      synch: 'true',
+                      type: "POST",
+                      url: '{% url 'modify_folder' %}',
+                      // data: $("#formSelectFolder").serialize(),
+                      data: {
+                        'id': data['OldHara']['id'],
+                        'folder': $("#selectFolder").val()
+                      },
+                      dataType: 'json',
+                      success: function(responseData) {
+                        let html_table;
+                        html_table = change_table(responseData);
+                        $("#listRef_"+data['OldHara']['id']).html(html_table);
+                      }
+                    });
+                    return false;
+                  });
+                });
+
+
+
+              });
+
 
 
             } catch (error) {
@@ -288,35 +335,6 @@
             }
           });
         </script>
-
-        <!-- <script>
-
-          $("#tableList").on('click','tr',function()  {
-            var id = $(this).find("td:first-child").text();
-            console.log(id);
-            $(this).toggleClass("select");
-            $.ajax({
-              synch: 'true',
-              url: '/select_list',
-              type: 'GET',
-              data: {
-                'id': id
-              },
-              dataType: 'json',
-              success: function (data) {
-                let html;
-                // for (let key in data)  {
-                //   html += key + ': ' + data[key] +'<br>'
-                // }
-                html = " <li class='list-group-item'>Title: <b>" + data['Title'] + "</b></li>"
-                +"<li class='list-group-item'>Authors: " + data['Authors'] + "</li> ";
-
-                $('#details').html(html);
-              }
-            });
-
-          });
-        </script> -->
 
 
     </body>

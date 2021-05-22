@@ -86,6 +86,7 @@ def view_home(request):
                             # Add id to the data
                             temp = {}
                             temp["id"] = c.id
+                            temp["folder"] = c.folder.path
                             d["OldHara"] = temp
 
                             c.data = d
@@ -123,11 +124,13 @@ def view_home(request):
 
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
+        'folder_list': folder_list,
         'page': 'home',
         'isCreated': isCreated,
         'isExist': isExist,
@@ -157,7 +160,19 @@ def modify_volume(request):
     responseData = t.data
     return JsonResponse(responseData)
 
+@csrf_exempt
+def modify_folder(request):
 
+    ref_id = int(request.POST['id'])
+    t = Biblio.objects.get(id=ref_id)
+
+    t.data["OldHara"]["folder"] = request.POST['folder']
+    t.json_payload = json.dumps(t.data)
+    t.folder = Path_Biblio.objects.get(path=request.POST['folder'])
+    t.save()
+
+    responseData = t.data
+    return JsonResponse(responseData)
 
 #
 #
