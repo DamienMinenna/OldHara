@@ -1,64 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-  .bg-menu{
-    background-color: #D6DDEE ;
-    color: black;
-    border-color: #7584A3;
-    border: 1px solid #7584A3;
-  }
-
-  .bg-detail{
-    background-color: #D6DDEE ;
-    color: black;
-    border-color: #7584A3;
-    border: 1px solid #7584A3;
-  }
-
-  #appadd {
-    white-space: nowrap;
-    overflow: hidden;
-    width: 10px;
-    height: 10px;
-    text-overflow: ellipsis;
-  }
-</style>
-
-
-<!-- <div class="container-fluid mb-2">
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="/">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Publi 1</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Publi 2</a>
-    </li>
-  </ul>
-</div> -->
 
 <div class="container-fluid">
-<div class="row">
-  <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    {% include "menu.html" %}
-  </nav>
+  <div class="row">
+    <div class="col-md-2 d-none d-md-block menu-sidebar">
+      {% include "menu.html" %}
+    </div>
 
-  {% if page == 'home' %}
-  <div class="col-7">
-    {% include "listRef.html" %}
+    <div class="col-7">
+      {% include "listRef.html" %}
+    </div>
+    <div class="col-3 detail-right">
+      {% include "details.html" %}
+    </div>
   </div>
-  <div class="col-3 bg-detail">
-    {% include "details.html" %}
-  </div>
-  {% elif page == 'addfolder'  %}
-  <div class="col-10">
-    {% include "addfolder.html" %}
-  </div>
-  {% elif page == 'addentry'  %}
-    {% include "addentry.html" %}
-  {% endif %}
-</div>
 </div>
 {%endblock%}

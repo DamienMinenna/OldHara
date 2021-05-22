@@ -1,0 +1,81 @@
+<div class="modal fade" id="ModaladdDOI" tabindex="-1" role="dialog" aria-labelledby="ModaladdDOILabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModaladdDOILabel">Add a new entry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if isDOICreated %}
+                    <div class="alert alert-success" role="alert">
+                    The entry is created!
+                    <br>
+                    <br>
+                    Title: {{ refs.0.getTitle }}
+                    <br>
+                    Authors: {{ refs.0.getAuthors_list }}
+                    <br>
+                    Journal: {{ refs.0.getJournal }}
+                    <br>
+                    Date: {{ refs.0.getDate }}
+                    </div>
+                {% endif %}
+                {% if isDOIExist %}
+                    <div class="alert alert-warning" role="alert">
+                    The DOI already exists!
+                    </div>
+                {% endif %}
+                {% if isDOInotValid %}
+                    <div class="alert alert-danger" role="alert">
+                    Cannot retrive a database for this DOI! Check the DOI validity.
+                    </div>
+                {% endif %}
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    {{ form_doi }}
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modaladdfolder" tabindex="-1" role="dialog" aria-labelledby="ModaladdfolderLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModaladdfolderLabel">Add a new folder</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% if isCreated %}
+            <div class="alert alert-success" role="alert">
+              The folder is created!
+            </div>
+          {% endif %}
+          {% if isExist %}
+            <div class="alert alert-warning" role="alert">
+              The folder already exists!
+            </div>
+          {% endif %}
+
+          <form action="/" method="post">
+            {% csrf_token %}
+            {{ form_addfolder }}
+            <input type="submit" value="Submit">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>

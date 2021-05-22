@@ -1,341 +1,113 @@
 {% load static%}<!DOCTYPE html>
 <html>
+  <head>
+    <title>Old Hara</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap" rel="stylesheet">
+    <meta name="google" content="notranslate" />
 
-    <head>
-        <title>Old Hara</title>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap" rel="stylesheet">
-        <meta name="google" content="notranslate" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-            crossorigin="anonymous" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+    <!-- Aacademicons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <link rel="stylesheet" href="{% static '/css/all.css' %}">
-    </head>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous" />
 
-    <body>
-        <style>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 
-        .titlefont{
-          color: white;
-          font-family: 'Lora', serif;
-          font-size: 17px;
-        }
+  </head>
 
-        .bg-title{
-          background-color: #A1B4DC;
-        }
+  <body> 
+    <!-- Navigation -->
+    <div class="container-fluid p-3 mb-2 bg-title fixed-top">
+      
+      <div class="fa fa-bars tooltips btn-sidebar" data-placement="right" data-original-title="Toggle Navigation"></div>
+      
+      <a class="navbar-brand text-white" href="/">
+        
+        <span class="titlefont"> 
+          <img src="{% static '/img/logo.png' %}" alt="" width="15">
+          Old Hara </span>
+      </a>
+      <span class="subtitlefont"> The open-source reference management software </span>
+    </div>
 
-        .bg-header2{
-          background-color: white ;
-          /* #E3E3E3; */
-        }
+    <nav class="navbar sticky-top bg-title flex-md-nowrap p-0">
+      <button type="button" class="btn btn-default text-center">
+        <span class="fas fa-cog"></span>
+        <br>Settings
+      </button>
+      <button type="button" href="addentry" class="btn btn-default text-center" data-toggle="modal" data-target="#ModaladdDOI">
+        <span class="fas fa-file-upload"></span>
+        <br>Add doi
+      </button>
+      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
+      <button type="button" class="btn btn-default text-center">
+        <span class="fas fa-question-circle"></span><br>Help</button>
+        <a href="https://github.com/DamienMinenna/OldHara" target="_blank" class="btn btn-default text-center">
+          <span class="fab fa-github-square"></span><br> &zwnj; 
+        </a>
+    </nav>
 
+    {% include "modal.html" %}
 
-        body {
-            font-family: "Roboto", sans-serif;
-            font-size: 12px;
-            background-color: #fdfdfd;
-            padding-top: 70px;
-        }
+    {% block content %}
+    <!-- Content Goes here -->
+    {% endblock content %}
 
-        .btn-default{
-            background-color: #A1B4DC;
-            color: black;             
-            border-color: #7584A3;
-            /* background: -webkit-linear-gradient(to bottom, #B2C7F4, #93A5CB);  /* Chrome 10-25, Safari 5.1-6 */
-            /* background: linear-gradient(to bottom, #B2C7F4, #93A5CB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */          */ */
-            border: 3px solid #7584A3;
-          }
-             
-        .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
-            background-color: #8593B2;
-            color: black;
-            border-color: #7584A3;
-          }
+    <!-- Footer -->
+    <footer class="py-3 bg-grey">
+        <p class="m-0 text-dark text-center ">  
+          Copyright &copy; Damien Minenna
+          <!-- This script automatically adds the current year to your website footer-->
+          <!-- (credit: https://updateyourfooter.com/)-->
+          <script>
+              document.write(new Date().getFullYear());
+          </script>
+        </p>
+    </footer>
 
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous">
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous">
+    </script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous">
+    </script>
+    <script async src='https://badge.dimensions.ai/badge.js' charset='utf-8'></script>
+    <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
 
+    <!-- variable from python before scripts.js -->
+    <script type='text/javascript'>
+      var isModalAF = {{ isModaladdfolder|yesno:'true,false' }};
+      var isModalD = {{ isModaladdDOI|yesno:'true,false' }};
 
-        </style>
+      var urlVolume = "{% url 'modify_volume' %}";
+      var urlFolder = "{% url 'modify_folder' %}";
 
-        <!-- Navigation -->
+      var folder_list = {{ folder_list|safe }};
+      var csrf_token_folder = '{% csrf_token %}';
 
+    </script>
+    <!-- Core theme JS-->
+    <script  src="{% static 'js/scripts.js' %}"></script>
 
-        <div class="container-fluid p-3 mb-2 bg-title fixed-top">
-          <a class="navbar-brand text-white" href="/">
-            <img src="{% static '/img/logo.png' %}" alt="" width="15">
-            <span class="titlefont"> Old Hara </span>
-          </a>
-          <span class="titlefont">  The open-source reference management software </span>
-        </div>
-
-        <nav class="navbar sticky-top bg-title flex-md-nowrap p-0">
-          <button type="button" class="btn btn-default text-center">
-            <span class="fas fa-cog"></span><br>Settings</button>
-          <button type="button" href="addentry" class="btn btn-default text-center" data-toggle="modal" data-target="#ModaladdDOI">
-            <span class="fas fa-file-upload"></span><br>Add doi</button>
-
-          <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
-          <button type="button" class="btn btn-default text-center">
-            <span class="fas fa-question-circle"></span><br>Help</button>
-          <a href="https://github.com/DamienMinenna/OldHara" target="_blank" class="btn btn-default text-center">
-            <span class="fab fa-github-square"></span><br> &zwnj; </a>
-        </nav>
-
-        <div class="modal fade" id="ModaladdDOI" tabindex="-1" role="dialog" aria-labelledby="ModaladdDOILabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="ModaladdDOILabel">Add a new entry</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                {% if isDOICreated %}
-                  <div class="alert alert-success" role="alert">
-                    The entry is created!
-                    <br>
-                    <br>
-                    Title: {{ refs.0.getTitle }}
-                    <br>
-                    Authors: {{ refs.0.getAuthors_list }}
-                    <br>
-                    Journal: {{ refs.0.getJournal }}
-                    <br>
-                    Date: {{ refs.0.getDate }}
-                  </div>
-                {% endif %}
-                {% if isDOIExist %}
-                  <div class="alert alert-warning" role="alert">
-                    The DOI already exists!
-                  </div>
-                {% endif %}
-                {% if isDOInotValid %}
-                  <div class="alert alert-danger" role="alert">
-                    Cannot retrive a database for this DOI! Check the DOI validity.
-                  </div>
-                {% endif %}
-
-                <form action="/" method="post">
-                  {% csrf_token %}
-                  {{ form_doi }}
-                  <input type="submit" value="Submit">
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {% block content %}
-        <!-- Content Goes here -->
-        {% endblock content %}
-
-        <!-- Footer -->
-        <footer class="py-3 bg-grey">
-            <p class="m-0 text-dark text-center ">  </p>
-        </footer>
-
-
-        <script
-          src="https://code.jquery.com/jquery-3.6.0.js"
-          integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-          crossorigin="anonymous">
-        </script>
-        <script
-          src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-          integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-          crossorigin="anonymous">
-        </script>
-        <script
-          src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-          crossorigin="anonymous">
-        </script>
-        <script async src='https://badge.dimensions.ai/badge.js' charset='utf-8'></script>
-        <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
-
-        <script>
-
-        var isModalAF = {{ isModaladdfolder|yesno:"true,false" }}
-        if (isModalAF) {
-          $('#Modaladdfolder').modal('show');
-        }
-
-        var isModalD = {{ isModaladdDOI|yesno:"true,false" }}
-        if (isModalD) {
-          $('#ModaladdDOI').modal('show');
-        }
-
-        </script>
-
-        <script>
-
-          function getAuthors(data) {
-            let authors;
-            if (typeof data['message']['author'] != "undefined") {
-              for(var key in data['message']['author']){
-                authors +=  data['message']['author'][key]['given'] + ' ' + data['message']['author'][key]['family'] + ', '
-              }
-              return authors.slice(0, -2).substring(9);
-            }
-            return "undefined"
-          }
-
-          function getAuthors_table(data) {
-            let authors;
-            if (typeof data['message']['author'] != "undefined") {
-              for(var key in data['message']['author']){
-                authors +=  data['message']['author'][key]['family'] + ', ' + data['message']['author'][key]['given'] + '; '
-              }
-              return authors.slice(0, -2).substring(9);
-            }
-            return ""
-          }
-
-          function getJournal(data) {
-            if (typeof data['message']['container-title'] != "undefined") {
-              return data['message']['container-title'][0];
-            }
-            return "undefined";
-          }
-
-          function getDate(data) {
-            if (typeof data['message']['issued'] != "undefined") {
-              if (typeof data['message']['issued']['date-parts'] != "undefined") {
-                  return data['message']['issued']['date-parts'];
-              }
-            }
-            return "undefined";
-          }
-
-          function getDate_table(data) {
-            if (typeof data['message']['issued'] != "undefined") {
-              if (typeof data['message']['issued']['date-parts'] != "undefined") {
-                  return data['message']['issued']['date-parts'][0][0];
-              }
-            }
-            return "";
-          }
-
-          function change_table(responseData) {
-            let html
-            html = "<td id='appadd'>" + JSON.stringify(responseData) + "</td>"
-            + "<td id='appadd'></td>"
-            + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
-            + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
-            + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
-            + "<td id='appadd'>" + getJournal(responseData) + "</td>"
-            + "<td id='appadd'></td>";
-            return html
-          }
-
-          $("#tableList").on('click', 'tr', function()  {
-            var data = $(this).find('td:first-child').text();
-            // console.log(typeof data);
-            try {
-              data = JSON.parse(data)
-
-              let html;
-              html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
-              + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
-              + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
-              + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
-              + "<li class='list-group-item'>Journal: " + getJournal(data) + "</li> "
-              + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
-              + "<li class='list-group-item'>Volume: <div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div> </li> "
-              + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
-              + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-              + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
-              + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-              + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
-              + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
-              + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
-              + "<li class='list-group-item'>Folder: <div id='editFolder'>" + data['OldHara']['folder'] + "</div> </li> "
-              + " ";
-
-              $('#details').html(html);
-              window.__dimensions_embed.addBadges()
-              _altmetric_embed_init();
-
-
-              document.getElementById("editVolume").addEventListener("input", function() {
-                  var volume = $('#editVolume').html();
-                  $.ajax({
-                    synch: 'true',
-                    url: '{% url 'modify_volume' %}',
-                    type: 'POST',
-                    data: {
-                      'id': data['OldHara']['id'],
-                      'volume': volume,
-                    },
-                    dataType: 'json',
-                    success: function (responseData) {
-                      let html_table;
-                      html_table = change_table(responseData);
-                      $("#listRef_"+data['OldHara']['id']).html(html_table);
-                    }
-                  });
-
-              }, false);
-
-              var folder_list = {{ folder_list|safe }}
-              $( "#editFolder" ).one( "click", function() {
-                let html_folderlist;
-
-                html_folderlist = "<form action='' method='POST' id='formSelectFolder'>"
-                    + '{% csrf_token %}'
-                    + "<select id='selectFolder' name='folder' onchange='this.form.submit()'>"
-                    + "<option value='" + data['OldHara']['folder'] + "'>" + data['OldHara']['folder'] + "</option>";
-                for(i = 0; i < folder_list.length; i++){
-                  if(!(folder_list[i] == data['OldHara']['folder'])){
-                    html_folderlist += "<option value='" + folder_list[i] + "'>" + folder_list[i] + "</option>"
-                  }
-                };
-                html_folderlist += "</select></form>"
-                $("#editFolder").html(html_folderlist);
-
-                $(document).ready(function(e) {
-                  $("[name='folder']").on('change', function() {
-                    $.ajax({
-                      synch: 'true',
-                      type: "POST",
-                      url: '{% url 'modify_folder' %}',
-                      // data: $("#formSelectFolder").serialize(),
-                      data: {
-                        'id': data['OldHara']['id'],
-                        'folder': $("#selectFolder").val()
-                      },
-                      dataType: 'json',
-                      success: function(responseData) {
-                        let html_table;
-                        html_table = change_table(responseData);
-                        $("#listRef_"+data['OldHara']['id']).html(html_table);
-                      }
-                    });
-                    return false;
-                  });
-                });
-
-
-
-              });
-
-
-
-            } catch (error) {
-              console.error('no json');
-              $('#details').html('Select an item');
-              window.__dimensions_embed.addBadges()
-              _altmetric_embed_init();
-            }
-          });
-        </script>
-
-
-    </body>
+  </body>
 </html>

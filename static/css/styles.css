@@ -1,0 +1,77 @@
+
+
+.titlefont{
+    color: white;
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    padding-left: 20px;
+}
+
+.subtitlefont{
+    color: white;
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    padding-left: 20px;
+}
+
+.btn-sidebar {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 20px;
+    color: white;
+}
+
+.bg-title{
+    background-color: #A1B4DC;
+}
+
+.bg-header2{
+    background-color: white ;
+}
+
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    background-color: #fdfdfd;
+    padding-top: 70px;
+}
+
+.btn-default{
+    background-color: #A1B4DC;
+    color: black;     
+}
+     
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    background-color: #8593B2;
+    color: black;
+}
+
+.bg-menu{
+    background-color: #D6DDEE ;
+    color: black;
+    border-color: #7584A3;
+    border: 1px solid #7584A3;
+  }
+
+.menu-sidebar{
+    background-color: #4a4a4a ;
+    color: #e2e2e2;
+    border-color: #1e1e1e;
+    border: 1px solid #1e1e1e;
+}
+
+.detail-right{
+    background-color: #D6DDEE ;
+    color: black;
+    border-color: #7584A3;
+    border: 1px solid #7584A3;
+}
+
+#appadd {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 10px;
+    height: 10px;
+    text-overflow: ellipsis;
+}
