@@ -28,9 +28,9 @@
 
   <body> 
     <!-- Navigation -->
-    <div class="container-fluid p-3 mb-2 bg-title fixed-top">
+    <div class="container-fluid p-3 mb-2 bg-header fixed-top">
       
-      <div class="fa fa-bars tooltips btn-sidebar" data-placement="right" data-original-title="Toggle Navigation"></div>
+      <button class="fa fa-bars tooltips btn-open-sidebar" onclick="openMenu()"></button>
       
       <a class="navbar-brand text-white" href="/">
         
@@ -40,23 +40,6 @@
       </a>
       <span class="subtitlefont"> The open-source reference management software </span>
     </div>
-
-    <nav class="navbar sticky-top bg-title flex-md-nowrap p-0">
-      <button type="button" class="btn btn-default text-center">
-        <span class="fas fa-cog"></span>
-        <br>Settings
-      </button>
-      <button type="button" href="addentry" class="btn btn-default text-center" data-toggle="modal" data-target="#ModaladdDOI">
-        <span class="fas fa-file-upload"></span>
-        <br>Add doi
-      </button>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search... (not working)">
-      <button type="button" class="btn btn-default text-center">
-        <span class="fas fa-question-circle"></span><br>Help</button>
-        <a href="https://github.com/DamienMinenna/OldHara" target="_blank" class="btn btn-default text-center">
-          <span class="fab fa-github-square"></span><br> &zwnj; 
-        </a>
-    </nav>
 
     {% include "modal.html" %}
 

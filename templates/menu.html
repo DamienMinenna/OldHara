@@ -1,24 +1,68 @@
 <br>
 
+<button type="button" class="btn btn-menu-add btn-sm text-center" data-toggle="modal" data-target="#ModaladdDOI">
+  <span class="fas fa-file-upload"></span> &nbsp; Add new entry
+</button>
+
+<hr>
+
+<h6 class="menu-accordion d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+  <span class="title-sidebar">
+    <i class="fas fa-folder"></i> &nbsp; Folders</span>
+    <!-- <button type="button" class="btn btn-menu-sidebar btn-sm text-center" data-toggle="modal" data-target="#Modaladdfolder">
+      <span class="fas fa-folder-plus"></span>
+    </button> -->
+</h6>
+
+<div class="menu-panel" style="display: block;">
+  <ul class="nav flex-column mb-2">
+  {% for path_i in paths %}
+  <li class="nav-item">
+    <button type="button" class="btn btn-menu-folder btn-sm text-center">
+      <span class="far fa-edit"></span>
+    </button>
+    <a class="text-sidebar" href="#">
+      {{ path_i.path }}
+    </a>
+  </li>
+  {% endfor %}
+  </ul>
+</div>
+
+<button type="button" class="btn btn-menu-add btn-sm text-center" data-toggle="modal" data-target="#Modaladdfolder">
+  <span class="fas fa-folder-plus"></span> &nbsp; Add new folder
+</button>
+
+<script type='text/javascript'>
+  // Hide section of the menu 
+  var acc = document.getElementsByClassName("menu-accordion");
+  var i;
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        console.log('coucou')
+        panel.style.display = "none";
+      } else {
+        console.log('couco2')
+        panel.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<hr>
 
 <h6 class="d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-  <span>Folders</span>
-  <button type="button" class="btn btn-default text-center" data-toggle="modal" data-target="#Modaladdfolder">
-    <span class="fas fa-folder-plus"></span>
-  </button>
+  <span class="title-sidebar">
+    <i class="fas fa-cog"></i> &nbsp; Settings </span>
+</h6>
+
+<h6 class="d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+  <span class="title-sidebar">
+    <i class="fas fa-question-circle"></i> &nbsp; Help </span>
 </h6>
 
 
-
-<ul class="nav flex-column mb-2">
-{% for path_i in paths %}
-<li class="nav-item">
-  <a class="nav-link" href="#">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-    {{ path_i.path }}
-  </a>
-</li>
-{% endfor %}
-</ul>
-
-
+<a class="btn btn-sidebar-bottom mx-2" href="https://github.com/DamienMinenna/" target="_blank"><i class="fab fa-github"></i></a>

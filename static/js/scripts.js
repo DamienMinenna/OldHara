@@ -9,6 +9,21 @@ if (isModalD) {
     $('#ModaladdDOI').modal('show');
 }
 
+// Hide the menu
+function openMenu() {
+    if (document.getElementById("main_sidebar").style.display === "none") {
+        document.getElementById("main_sidebar").style.display = "block";
+        document.getElementById("main_container").classList.remove('col-9')
+        document.getElementById("main_container").classList.add('col-7')
+    } else {
+        document.getElementById("main_sidebar").style.display = "none";
+        document.getElementById("main_container").classList.remove('col-7')
+        document.getElementById("main_container").classList.add('col-9')
+    } 
+}
+
+
+// retrive database
 function getAuthors(data) {
     let authors;
     if (typeof data['message']['author'] != "undefined") {
@@ -73,25 +88,40 @@ $("#tableList").on('click', 'tr', function()  {
     try {
         data = JSON.parse(data)
 
-        let html;
-        html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
-            + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
-            + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
-            + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
-            + "<li class='list-group-item'>Journal: " + getJournal(data) + "</li> "
-            + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
-            + "<li class='list-group-item'>Volume: <div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div> </li> "
-            + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
-            + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-            + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
-            + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-            + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
-            + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
-            + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
-            + "<li class='list-group-item'>Folder: <div id='editFolder'>" + data['OldHara']['folder'] + "</div> </li> "
-            + " ";
+        // let html;
+        // html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
+        //     + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
+        //     + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
+        //     + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
+        //     + "<li class='list-group-item'>Journal: " + getJournal(data) + "</li> "
+        //     + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
+        //     + "<li class='list-group-item'>Volume: <div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div> </li> "
+        //     + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
+        //     + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
+        //     + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
+        //     + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
+        //     + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
+        //     + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
+        //     + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
+        //     + "<li class='list-group-item'>Folder: <div id='editFolder'>" + data['OldHara']['folder'] + "</div> </li> "
+        //     + " ";
+        // $('#details').html(html);
 
-        $('#details').html(html);
+        $('#detail_id').html(data['OldHara']['id']);
+        $('#detail_type').html(data['message']['type']);
+        $('#detail_title').html(data['message']['title']);
+        $('#detail_authors').html(getAuthors(data));
+        $('#detail_journal').html(getJournal(data));
+        $('#detail_data').html(getDate(data));
+        $('#detail_volume').html("<div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div>");
+        $('#detail_issue').html(data['message']['issue']);
+        $('#detail_page').html(data['message']['page']);
+        $('#detail_artnumber').html(data['message']['article-number']);
+
+        $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a>");
+        $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div>");
+        $('#detail_folder').html("<div id='editFolder'>" + data['OldHara']['folder'] + "</div>");
+
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 
