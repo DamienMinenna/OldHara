@@ -174,7 +174,7 @@ body {
 
 /* Middle container */
 .main-container{
-    /* margin-left: -50px; */
+    background: #dcdcdc;
 }
 
 #appadd {
