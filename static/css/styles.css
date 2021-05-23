@@ -144,7 +144,7 @@ body {
     justify-content: center;
     padding: 0;
     border-radius: 100%;  
-    margin-top: 50px;  
+    /* margin-top: 50px;   */
 }
      
 .btn-sidebar-bottom:focus {
@@ -174,7 +174,21 @@ body {
 
 /* Middle container */
 .main-container{
-    background: #dcdcdc;
+    background: #f3f3f3;
+}
+
+.table-header{
+    background: #d5d5d5;
+}
+
+.table-item{
+    height: 45px;
+    max-height: 45px;
+    color: black;
+}
+
+.table-selected{
+    background: #a0bbdf !important;
 }
 
 #appadd {
@@ -191,4 +205,12 @@ body {
     background-color: #e5e5e5 ;
     color: black;
     border-color: #aaaaaa;
+}
+
+.detail-li{
+    min-height: 45px;
+}
+.detail-names{
+    color: #949494;
+    font-size: 10px;   
 }

@@ -2,7 +2,7 @@
 
 <div class="table-responsive">
   <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="tableList">
-    <thead>
+    <thead class="table-header">
       <tr>
         <th width="0px"></th>
         <th width="40px">File</th>
@@ -10,17 +10,16 @@
         <th width="350px">Title</th>
         <th width="70px">Date</th>
         <th width="200px">Journal</th>
-        <th width="200px">test</th>
       </tr>
     </thead>
     <tbody>
     {% for ref_i in refs %}
-      <tr id="listRef_{{ ref_i.id }}">
+      <tr id="listRef_{{ ref_i.id }}" class="table-item">
         <td id="appadd">{{ ref_i.json_payload }} </td>
         <!-- <td id="appadd">{{ ref_i }} </td> -->
         <td id="appadd">
         {% if ref_i.mainFile %}
-        <a type="button" href="{{ "media/"|add:ref_i.mainFile.name }}" target="_blank">
+        <a type="button" href="{{ 'media/'|add:ref_i.mainFile.name }}" target="_blank">
           <i class="far fa-file-pdf"></i>
         </a>
         {% endif %}
@@ -29,9 +28,10 @@
         <td id="appadd">{{ ref_i.getTitle }}</td>
         <td id="appadd">{{ ref_i.getDate }}</td>
         <td id="appadd">{{ ref_i.getJournal }}</td>
-        <td id="appadd">{{ ref_i.data.status }} {{ ref_i.id }} </td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 </div>
+
+<br>

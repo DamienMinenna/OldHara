@@ -78,58 +78,50 @@ function change_table(responseData) {
     + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
     + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
     + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
-    + "<td id='appadd'>" + getJournal(responseData) + "</td>"
-    + "<td id='appadd'></td>";
+    + "<td id='appadd'>" + getJournal(responseData) + "</td>";
     return html
 }
 
 $("#tableList").on('click', 'tr', function()  {
+
+    // Remove class table-selected 
+    var table = document.getElementById("tableList");
+    for (var i = 1, row; row = table.rows[i]; i++) {
+        var idTable = table.rows[i].id
+        if($("#" + idTable).hasClass("table-selected")){
+            $("#" + idTable).removeClass("table-selected")
+        }
+    }
+
     var data = $(this).find('td:first-child').text();
     try {
         data = JSON.parse(data)
 
-        // let html;
-        // html = " <li class='list-group-item'>id: " + data['OldHara']['id'] + "</li> "
-        //     + " <li class='list-group-item'>Type: " + data['message']['type'] + "</li> "
-        //     + "<li class='list-group-item'>Title: <b>" + data['message']['title'] + "</b></li>"
-        //     + "<li class='list-group-item'>Authors: " + getAuthors(data) + "</li> "
-        //     + "<li class='list-group-item'>Journal: " + getJournal(data) + "</li> "
-        //     + "<li class='list-group-item'>Date: " + getDate(data) + "</li> "
-        //     + "<li class='list-group-item'>Volume: <div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div> </li> "
-        //     + "<li class='list-group-item'>Issue: " + data['message']['issue'] + "</li> "
-        //     + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-        //     + "<li class='list-group-item'>Article number: " + data['message']['article-number'] + "</li> "
-        //     + "<li class='list-group-item'>Pages: " + data['message']['page'] + "</li> "
-        //     + "<li class='list-group-item'>DOI: <a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a></li> "
-        //     + "<li class='list-group-item'> <span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>"
-        //     + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div></li> "
-        //     + "<li class='list-group-item'>Folder: <div id='editFolder'>" + data['OldHara']['folder'] + "</div> </li> "
-        //     + " ";
-        // $('#details').html(html);
-
-        $('#detail_id').html(data['OldHara']['id']);
         $('#detail_type').html(data['message']['type']);
         $('#detail_title').html(data['message']['title']);
         $('#detail_authors').html(getAuthors(data));
         $('#detail_journal').html(getJournal(data));
-        $('#detail_data').html(getDate(data));
-        $('#detail_volume').html("<div contenteditable='true' id='editVolume'>" + data['message']['volume'] + "</div>");
+        $('#detail_date').html(getDate(data));
+        $('#detail_volume').html("<div contenteditable='true' id='editVolume' style='display: inline-block;'>" + data['message']['volume'] + "</div>");
         $('#detail_issue').html(data['message']['issue']);
         $('#detail_page').html(data['message']['page']);
         $('#detail_artnumber').html(data['message']['article-number']);
 
         $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a>");
         $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div>");
-        $('#detail_folder').html("<div id='editFolder'>" + data['OldHara']['folder'] + "</div>");
+        $('#detail_folder').html("<div id='editFolder' style='display: inline-block;'>" + data['OldHara']['folder'] + "</div>");
 
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 
+        $("#listRef_"+data['OldHara']['id']).addClass("table-selected");
+
+        // Edit volume
         document.getElementById("editVolume").addEventListener("input", function() {
             var volume = $('#editVolume').html();
             $.ajax({
                 synch: 'true',
-                url: urlVolume,
+                url: urlmodify_biblio,
                 type: 'POST',
                 data: {
                     'id': data['OldHara']['id'],
@@ -145,6 +137,7 @@ $("#tableList").on('click', 'tr', function()  {
 
         }, false);
 
+        // Edit folder
         $( "#editFolder" ).one( "click", function() {
             let html_folderlist;
 
@@ -167,7 +160,7 @@ $("#tableList").on('click', 'tr', function()  {
                     $.ajax({
                         synch: 'true',
                         type: "POST",
-                        url: urlFolder,
+                        url: urlmodify_biblio,
                         data: {
                             'id': data['OldHara']['id'],
                             'folder': $("#selectFolder").val()
@@ -181,7 +174,7 @@ $("#tableList").on('click', 'tr', function()  {
                     });
                     return false;
                 });
-            });
+            }, false);
         });
 
     } catch (error) {

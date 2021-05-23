@@ -82,8 +82,7 @@
       var isModalAF = {{ isModaladdfolder|yesno:'true,false' }};
       var isModalD = {{ isModaladdDOI|yesno:'true,false' }};
 
-      var urlVolume = "{% url 'modify_volume' %}";
-      var urlFolder = "{% url 'modify_folder' %}";
+      var urlmodify_biblio = "{% url 'modify_biblio' %}";
 
       var folder_list = {{ folder_list|safe }};
       var csrf_token_folder = '{% csrf_token %}';

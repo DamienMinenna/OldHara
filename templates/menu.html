@@ -7,14 +7,14 @@
 <hr>
 
 <h6 class="menu-accordion d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-  <span class="title-sidebar">
+  <span class="title-sidebar" id="menu-folder-name">
     <i class="fas fa-folder"></i> &nbsp; Folders</span>
-    <!-- <button type="button" class="btn btn-menu-sidebar btn-sm text-center" data-toggle="modal" data-target="#Modaladdfolder">
+    <button type="button" class="btn btn-menu-sidebar btn-sm text-center" data-toggle="modal" data-target="#Modaladdfolder">
       <span class="fas fa-folder-plus"></span>
-    </button> -->
+    </button>
 </h6>
 
-<div class="menu-panel" style="display: block;">
+<div class="menu-panel" style="display: block;" id="menu-folder-list">
   <ul class="nav flex-column mb-2">
   {% for path_i in paths %}
   <li class="nav-item">
@@ -29,27 +29,16 @@
   </ul>
 </div>
 
-<button type="button" class="btn btn-menu-add btn-sm text-center" data-toggle="modal" data-target="#Modaladdfolder">
-  <span class="fas fa-folder-plus"></span> &nbsp; Add new folder
-</button>
-
 <script type='text/javascript'>
-  // Hide section of the menu 
-  var acc = document.getElementsByClassName("menu-accordion");
-  var i;
-  for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
+  // Hide folder list
+  document.getElementById("menu-folder-name").addEventListener("click", function() {
       this.classList.toggle("active");
-      var panel = this.nextElementSibling;
-      if (panel.style.display === "block") {
-        console.log('coucou')
-        panel.style.display = "none";
+      if (document.getElementById("menu-folder-list").style.display === "block") {
+          document.getElementById("menu-folder-list").style.display = "none";
       } else {
-        console.log('couco2')
-        panel.style.display = "block";
+          document.getElementById("menu-folder-list").style.display = "block";
       }
-    });
-  }
+  });  
 </script>
 
 <hr>
@@ -65,4 +54,5 @@
 </h6>
 
 
-<a class="btn btn-sidebar-bottom mx-2" href="https://github.com/DamienMinenna/" target="_blank"><i class="fab fa-github"></i></a>
+Old Hara v0.5
+<a class="btn btn-sidebar-bottom mx-2" href="https://github.com/DamienMinenna/OldHara" target="_blank"><i class="fab fa-github"></i></a> 
