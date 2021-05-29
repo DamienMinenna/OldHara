@@ -153,6 +153,35 @@ body {
     color: #fdfcfc;
 }
 
+/* Button menu top */
+.btn-sidebar-top{
+    color: #bbbaba;
+    height: 2.5rem;
+    width: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 5px;
+    border: 1px solid #bbbaba;
+    transition: transform 500ms;
+    font-size: 16px;
+    padding-right: -10px;
+    padding-left: 10px;
+}
+     
+.btn-sidebar-top:focus .btn-sidebar-top:hover, .btn-sidebar-top:link{
+    color: #dddddd !important;
+    border: 1px solid #dddddd;
+    transform: translateX(2px);
+}
+
+.badge-sidebar-top{
+    font-size: 10px;
+    margin-left: -5px; 
+    margin-top: 30px;
+}
+
 /* Button social bottom menu */
 .btn-sidebar-bottom{
     color: #cdcccc;

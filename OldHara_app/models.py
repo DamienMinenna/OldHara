@@ -11,24 +11,48 @@ STATUS = (
 )
 
 TYPE = (
-    (0,"Book"),
-    (1,"Book Section"),
-    (2,"Conference Proceedings"),
-    (3,"Journal Article"),
-    (4,"Magazine Article"),
-    (5,"Newspaper Article"),
-    (6,"Report"),
-    (7,"Thesis"),
-    (8,"Web page"),
-    (9,"Other"),
+    (0,"journal-article"),
+    (1,"proceedings-article"),
+    (2,"dissertation"),
+    (3,"book-chapter"),
+    (4,"book"),
+    (5,"report"),
+    (6,"dataset"),
+    (7,"component"),
+    (8,"reference-entry"),
+    (9,"monograph"),
+    (10,"peer-review"),
+    (11,"posted-content"),
+    (12,"standard"),
+    (13,"other"),
 )
 
+TYPE_LIST = [ 
+    'journal-article', 
+    'proceedings-article',
+    'dissertation',
+    'book-chapter',
+    'book',
+    'report',
+    'dataset',
+    'component',
+    'reference-entry',
+    'monograph',
+    'peer-review',
+    'posted-content',
+    'standard',
+    'other',    
+    ]
 
 class Path_Biblio(models.Model):
     path = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.path
+
+class FileStore(models.Model):
+    folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
+    file = models.FileField(upload_to = 'toSort/',blank=True)
 
 class Biblio(models.Model):
     # slug = models.SlugField(max_length=200, unique=True)
@@ -58,7 +82,7 @@ class Biblio(models.Model):
 
     mainFile = models.FileField(upload_to='toSort/',blank=True)
 
-    # os.rename(model.mainFile.path, new_path)
+    # os.rename(model.mainFile.path, new_name)
     # model.mainFile.name = new_name
     # model.save()
 

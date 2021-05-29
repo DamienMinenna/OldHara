@@ -4,11 +4,6 @@ if (isModalAF) {
     $('#Modaladdfolder').modal('show');
 }
 
-// Display modal if needed
-if (isModalD) {
-    $('#ModaladdDOI').modal('show');
-}
-
 // Hide the menu
 function openMenu() {
     if (document.getElementById("main_sidebar").style.display === "none") {

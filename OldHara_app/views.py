@@ -1,34 +1,19 @@
 import os
 import requests
 import json
+import ntpath
 
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
 
-from .models import Biblio, Path_Biblio
+from .models import Biblio, Path_Biblio, FileStore
 from .forms import addfolderForm, addDOIForm
 
 # Create your views here.
-
-TYPE_LIST = [ 
-    'journal-article', 
-    'proceedings-article',
-    'posted-content',
-    'book-chapter',
-    'book',
-    'report',
-    'dataset',
-    'component',
-    'reference-entry',
-    'monograph',
-    'peer-review',
-    'dissertation',
-    'standard',
-    'other',    
-    ]
 
 def view_home(request):
     """
@@ -76,12 +61,14 @@ def view_home(request):
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
+    file_to_sort = FileStore.objects.order_by('id')
+
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
         'folder_list': folder_list,
-        'page': 'home',
+        'file_to_sort' : file_to_sort,
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
@@ -101,6 +88,28 @@ def view_add_biblio(request):
     isDOInotValid = False
     if request.method == 'POST':
 
+        if 'dropzone_folder' in request.POST: #not(request.FILES is None):
+            # print(request.POST)
+            # print(request.FILES)
+            folder = request.POST['dropzone_folder']
+            
+            uploaded_file = request.FILES['file']
+            c = FileStore(
+                folder = Path_Biblio.objects.get(id = folder),
+                file=uploaded_file, 
+            )
+            c.save()
+
+            initial_path = c.file.path
+            filename = ntpath.basename(c.file.name)
+            c.file.name = Path_Biblio.objects.get(id = folder).path + '/' +  filename
+            new_path = settings.MEDIA_ROOT + c.file.name
+            os.rename(initial_path, new_path)
+            c.save()
+
+            print('SAVED in ', c.file.name, c.file.path, new_path)
+
+
         if 'nameFolder' in request.POST:
             # create a form instance and populate it with data from the request:
             form_addfolder = addfolderForm(request.POST)
@@ -114,7 +123,7 @@ def view_add_biblio(request):
                 if not os.path.exists(path):
                     os.mkdir(path)
 
-                    b = Path_Biblio(path=nameFolder)
+                    b = Path_Biblio(path = nameFolder)
                     b.save()
 
                     isCreated = True
@@ -132,6 +141,7 @@ def view_add_biblio(request):
                 nameDOI = str(request.POST['nameDOI']).lower()
                 folder = request.POST['folder']
 
+                print('ionsfjoifjs', folder)
                 refs = Biblio.objects.all()
 
                 for ref_i in refs:
@@ -150,11 +160,13 @@ def view_add_biblio(request):
 
                             d = json.loads(r.text)  # r.text == <class 'str'>  and d == <class 'dict'>
                             title_newentry = str(d['message']['title'][0])
+
                             c = Biblio(
                                 title = title_newentry,
                                 data = d,
                                 json_payload = r.text,
-                                folder = Path_Biblio.objects.get(id=folder)
+                                folder = Path_Biblio.objects.get(id = folder),
+                                status = 1
                             )
 
                             c.save()
@@ -188,10 +200,13 @@ def view_add_biblio(request):
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
 
+    file_to_sort = FileStore.objects.order_by('id')
+
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
+        'file_to_sort' : file_to_sort,
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
