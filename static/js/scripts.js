@@ -97,35 +97,119 @@ $("#tableList").on('click', 'tr', function()  {
     try {
         data = JSON.parse(data)
 
+        $('#detail_folder').html("<div id='editFolder' class='detail-editable'>" + data['OldHara']['folder'] + "</div>");
         $('#detail_type').html(data['message']['type']);
-        $('#detail_title').html(data['message']['title']);
+        $('#detail_title').html("<div contenteditable='true' id='editTitle' class='detail-editable'>" + data['message']['title'] + "</div>");
         $('#detail_authors').html(getAuthors(data));
         $('#detail_journal').html(getJournal(data));
         $('#detail_date').html(getDate(data));
-        $('#detail_volume').html("<div contenteditable='true' id='editVolume' style='display: inline-block;'>" + data['message']['volume'] + "</div>");
-        $('#detail_issue').html(data['message']['issue']);
-        $('#detail_page').html(data['message']['page']);
-        $('#detail_artnumber').html(data['message']['article-number']);
+        $('#detail_volume').html("<div contenteditable='true' id='editVolume' class='detail-editable'>" + data['message']['volume'] + "</div>");
+        $('#detail_issue').html("<div contenteditable='true' id='editIssue' class='detail-editable'>" + data['message']['issue'] + "</div>");
+        $('#detail_page').html("<div contenteditable='true' id='editPage' class='detail-editable'>" + data['message']['page'] + "</div>");
+        $('#detail_artnumber').html("<div contenteditable='true' id='editArtNumb' class='detail-editable'>" + data['message']['article-number'] + "</div>");
 
         $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a>");
         $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div>");
-        $('#detail_folder').html("<div id='editFolder' style='display: inline-block;'>" + data['OldHara']['folder'] + "</div>");
-
+        
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 
         $("#listRef_"+data['OldHara']['id']).addClass("table-selected");
 
-        // Edit volume
-        document.getElementById("editVolume").addEventListener("input", function() {
-            var volume = $('#editVolume').html();
+        // Edit Title
+        document.getElementById("editTitle").addEventListener("input", function() {
+            var edtitle = $('#editTitle').html();
             $.ajax({
                 synch: 'true',
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
                     'id': data['OldHara']['id'],
-                    'volume': volume,
+                    'title': edtitle,
+                },
+                dataType: 'json',
+                success: function (responseData) {
+                    let html_table;
+                    html_table = change_table(responseData);
+                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                }
+            });
+
+        }, false);
+
+        // Edit volume
+        document.getElementById("editVolume").addEventListener("input", function() {
+            var edvolume = $('#editVolume').html();
+            $.ajax({
+                synch: 'true',
+                url: urlmodify_biblio,
+                type: 'POST',
+                data: {
+                    'id': data['OldHara']['id'],
+                    'volume': edvolume,
+                },
+                dataType: 'json',
+                success: function (responseData) {
+                    let html_table;
+                    html_table = change_table(responseData);
+                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                }
+            });
+
+        }, false);
+
+        // Edit Issue
+        document.getElementById("editIssue").addEventListener("input", function() {
+            var edissue = $('#editIssue').html();
+            $.ajax({
+                synch: 'true',
+                url: urlmodify_biblio,
+                type: 'POST',
+                data: {
+                    'id': data['OldHara']['id'],
+                    'issue': edissue,
+                },
+                dataType: 'json',
+                success: function (responseData) {
+                    let html_table;
+                    html_table = change_table(responseData);
+                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                }
+            });
+
+        }, false);
+
+        // Edit Page
+        document.getElementById("editPage").addEventListener("input", function() {
+            var edpage = $('#editPage').html();
+            $.ajax({
+                synch: 'true',
+                url: urlmodify_biblio,
+                type: 'POST',
+                data: {
+                    'id': data['OldHara']['id'],
+                    'page': edpage,
+                },
+                dataType: 'json',
+                success: function (responseData) {
+                    let html_table;
+                    html_table = change_table(responseData);
+                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                }
+            });
+
+        }, false);
+
+        // Edit Article number
+        document.getElementById("editArtNumb").addEventListener("input", function() {
+            var edArtNumb = $('#editArtNumb').html();
+            $.ajax({
+                synch: 'true',
+                url: urlmodify_biblio,
+                type: 'POST',
+                data: {
+                    'id': data['OldHara']['id'],
+                    'ArtNumb': edArtNumb,
                 },
                 dataType: 'json',
                 success: function (responseData) {
@@ -179,7 +263,7 @@ $("#tableList").on('click', 'tr', function()  {
 
     } catch (error) {
         console.error('no json');
-        $('#details').html('Select an item');
+        
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
     }

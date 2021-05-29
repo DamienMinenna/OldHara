@@ -79,8 +79,7 @@
 
     <!-- variable from python before scripts.js -->
     <script type='text/javascript'>
-      var isModalAF = {{ isModaladdfolder|yesno:'true,false' }};
-      var isModalD = {{ isModaladdDOI|yesno:'true,false' }};
+      var isModalAF = {{ isModaladdfolder|yesno:'true,false' }} ;
 
       var urlmodify_biblio = "{% url 'modify_biblio' %}";
 

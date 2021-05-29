@@ -18,14 +18,17 @@ body {
     font-family: 'Lora', serif;
     font-size: 17px;
     padding-left: 20px;
+    transition: transform 500ms;
 }
 
 .titlefont:hover{
     color: #fdfcfc;
+    transform: translateX(5px);
 }
 
 .titlefont:focus{
     color: #fdfcfc;
+    transform: translateX(5px);
 }
 
 .subtitlefont{
@@ -41,13 +44,16 @@ body {
     font-size: 20px;
     color: #d2d2d2;
     margin-left: 20px;
+    transition: transform 100ms;
 }
 
 .btn-open-sidebar:hover {
     color: #fdfcfc;
+    transform: translateX(2px);
 }
 .btn-open-sidebar:focus {
     color: #fdfcfc;
+    transform: translateX(2px);
 }
 
 
@@ -65,18 +71,29 @@ body {
 }
 
 .title-sidebar{
-    color: #fdfcfc;
+    color: #e0e0e0;
     font-size: 14px;
+    cursor: pointer;
+    transition: transform 500ms;
+}
+
+.title-sidebar:hover {
+    /* background-color: #929292;  */
+    color: #ffffff;
+    /* border: 1px solid #868686; */
+    transform: translateX(5px);
 }
 
 .text-sidebar{
     color: #cdcccc;
     font-size: 12px;
     padding-inline-start: 12px;
+    transition: transform 500ms;
 }
 
 .text-sidebar:focus, .text-sidebar:hover{
     color: #fdfcfc;
+    transform: translateX(5px);
 }
 
 .btn-menu-add{
@@ -97,6 +114,8 @@ body {
     background-color: #4a4a4a;
     border: 1px solid #27465c;
     color: #fdfcfc;
+    transition: transform 500ms ease 0s;
+    will-change: transform;
 }
 
 .btn-menu-sidebar{
@@ -157,15 +176,6 @@ body {
     color: #fdfcfc;
 }
 
-.menu-accordion {
-    cursor: pointer;
-    transition: 0.4s;
-}
-
-.menu-accordion:hover {
-    background-color: #929292; 
-}
-
 .menu-panel {
     display: block;
     overflow: hidden;
@@ -213,4 +223,22 @@ body {
 .detail-names{
     color: #949494;
     font-size: 10px;   
+}
+
+.detail-editable{
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    background: #fdfdfd;
+    transition: transform 250ms ease 0s;
+    display: inline-block;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+.detail-editable:hover{
+    background: #ececec;
+}
+
+.detail-editable:focus{
+    background: #ececec;
 }

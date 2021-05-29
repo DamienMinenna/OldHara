@@ -13,8 +13,85 @@ from .forms import addfolderForm, addDOIForm
 
 # Create your views here.
 
+TYPE_LIST = [ 
+    'journal-article', 
+    'proceedings-article',
+    'posted-content',
+    'book-chapter',
+    'book',
+    'report',
+    'dataset',
+    'component',
+    'reference-entry',
+    'monograph',
+    'peer-review',
+    'dissertation',
+    'standard',
+    'other',    
+    ]
+
 def view_home(request):
+    """
+    Main view.
+    """
     template_name = 'index.html'
+
+    isCreated = False
+    isExist = False
+    isModaladdfolder = False
+    if request.method == 'POST':
+
+        if 'nameFolder' in request.POST:
+            # create a form instance and populate it with data from the request:
+            form_addfolder = addfolderForm(request.POST)
+            form_doi = addDOIForm()
+            # check whether it's valid:
+            if form_addfolder.is_valid():
+
+                nameFolder = request.POST['nameFolder']
+                path = str('media/') + nameFolder
+
+                if not os.path.exists(path):
+                    os.mkdir(path)
+
+                    b = Path_Biblio(path=nameFolder)
+                    b.save()
+
+                    isCreated = True
+                else:
+                    isExist = True
+                isModaladdfolder = True
+
+        else:
+            form_addfolder = addfolderForm()
+            form_doi = addDOIForm()
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form_addfolder = addfolderForm()
+        form_doi = addDOIForm()
+
+    refs = Biblio.objects.order_by('-created_on')
+    paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
+
+    return render(request, template_name,{
+        'refs' : refs,
+        'form_addfolder' : form_addfolder,
+        'paths': paths,
+        'folder_list': folder_list,
+        'page': 'home',
+        'isCreated': isCreated,
+        'isExist': isExist,
+        'isModaladdfolder': isModaladdfolder,
+        })
+
+def view_add_biblio(request):
+    """
+    View for adding file
+    """
+    template_name = 'add_biblio.html'
 
     isCreated = False
     isExist = False
@@ -22,7 +99,6 @@ def view_home(request):
     isDOICreated = False
     isDOIExist = False
     isDOInotValid = False
-    isModaladdDOI = False
     if request.method == 'POST':
 
         if 'nameFolder' in request.POST:
@@ -87,6 +163,8 @@ def view_home(request):
                             temp = {}
                             temp["id"] = c.id
                             temp["folder"] = c.folder.path
+                            temp["title"] = str(d['message']['title'][0])
+                            temp["dateY"] = str(d['message']['issued']['date-parts'][0][0])
                             d["OldHara"] = temp
 
                             c.data = d
@@ -96,21 +174,6 @@ def view_home(request):
 
                         else:
                             isDOInotValid = True
-
-                            # dico_1 = {}
-                            # dico_1["status"] = "ok"
-                            # dico_1["DOI"] = nameDOI
-                            # dico_2 = {}
-                            # dico_2["message"] = dico_1
-                            # c = Ref(
-                            #     title = nameDOI,
-                            #     data = dico_2,
-                            #     json_payload = json.dumps(dico_2)
-                            # )
-                            # c.save()
-
-
-                        isModaladdDOI = True
 
         else:
             form_addfolder = addfolderForm()
@@ -124,14 +187,11 @@ def view_home(request):
 
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
-    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
-        'folder_list': folder_list,
-        'page': 'home',
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
@@ -139,22 +199,74 @@ def view_home(request):
         'isDOICreated': isDOICreated,
         'isDOIExist': isDOIExist,
         'isDOInotValid': isDOInotValid,
-        'isModaladdDOI' : isModaladdDOI
         })
-
-
 
 @csrf_exempt
 def modify_biblio(request):
+    """
+    Request AJAX to modify the biblio
+    """
 
     ref_id = int(request.POST['id'])
     t = Biblio.objects.get(id=ref_id)
 
-    if 'volume' in request.POST:
+    if 'title' in request.POST:
+        title = request.POST['title'].rstrip("\n")
+
+        dico_temp = t.data["message"]
+        dico_temp["title"] = [title,]
+        t.data["message"] = dico_temp
+
+        t.json_payload = json.dumps(t.data)
+        t.save()
+
+        responseData = t.data
+        return JsonResponse(responseData)
+
+    elif 'volume' in request.POST:
         volume = request.POST['volume'].rstrip("\n")
 
         dico_temp = t.data["message"]
         dico_temp["volume"] = volume
+        t.data["message"] = dico_temp
+
+        t.json_payload = json.dumps(t.data)
+        t.save()
+
+        responseData = t.data
+        return JsonResponse(responseData)
+
+    elif 'issue' in request.POST:
+        issue = request.POST['issue'].rstrip("\n")
+
+        dico_temp = t.data["message"]
+        dico_temp["issue"] = issue
+        t.data["message"] = dico_temp
+
+        t.json_payload = json.dumps(t.data)
+        t.save()
+
+        responseData = t.data
+        return JsonResponse(responseData)
+
+    elif 'page' in request.POST:
+        page = request.POST['page'].rstrip("\n")
+
+        dico_temp = t.data["message"]
+        dico_temp["page"] = page
+        t.data["message"] = dico_temp
+
+        t.json_payload = json.dumps(t.data)
+        t.save()
+
+        responseData = t.data
+        return JsonResponse(responseData)
+
+    elif 'ArtNumb' in request.POST:
+        ArtNumb = request.POST['ArtNumb'].rstrip("\n")
+
+        dico_temp = t.data["message"]
+        dico_temp["article-number"] = ArtNumb
         t.data["message"] = dico_temp
 
         t.json_payload = json.dumps(t.data)

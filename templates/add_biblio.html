@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row" id="main_Row">
+    <div class="col-2 menu-sidebar" id="main_sidebar">
+      {% include "menu.html" %}
+    </div>
+    <div class="col-7 main-container" id="main_container">
+
+    </div>
+    
+    <div class="col-3 detail-right" id="add_DOI">
+      <br>
+      <br>
+
+      <h4>Add a DOI</h4>
+
+      {% if isDOICreated %}
+        <div class="alert alert-success" role="alert">
+        The entry is created!
+        <br>
+        <br>
+        Title: <b>{{ refs.0.getTitle }}</b>
+        <br>
+        Authors: {{ refs.0.getAuthors_list }}
+        <br>
+        Journal: {{ refs.0.getJournal }}
+        <br>
+        Date: {{ refs.0.getDate }}
+        </div>
+      {% endif %}
+      {% if isDOIExist %}
+        <div class="alert alert-warning" role="alert">
+          The DOI already exists!
+        </div>
+      {% endif %}
+      {% if isDOInotValid %}
+        <div class="alert alert-danger" role="alert">
+          Cannot retrive a database for this DOI! Check the DOI validity.
+        </div>
+      {% endif %}
+      <form action="/add_biblio" method="post">
+        {% csrf_token %}
+        {{ form_doi.as_p }}
+        <input type="submit" value="Submit">
+      </form>
+
+      <br>
+
+      <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
+
+    </div>
+  
+  </div>
+</div>
+{%endblock%}
+
