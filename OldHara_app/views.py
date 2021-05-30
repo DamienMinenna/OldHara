@@ -237,4 +237,9 @@ def modify_biblio(request):
         responseData = t.db
         return JsonResponse(responseData)
 
-   
+    elif 'edDelete' in request.POST:
+        edDelete = request.POST['edDelete']
+        if edDelete == 'true':
+            t.delete()
+
+        return JsonResponse({})

@@ -109,6 +109,10 @@ $("#tableList").on('click', 'tr', function()  {
         $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['DOI'] + "'>" + data['DOI'] + "</a>");
         $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['DOI'] + " class='altmetric-embed'></div>");
         
+        $('#detail_delete').html("<button type='button' id='editDelete'><span class='fas fa-trash-alt'></span></button>");
+
+        
+
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 
@@ -259,6 +263,26 @@ $("#tableList").on('click', 'tr', function()  {
                 });
             }, false);
         });
+
+        // Edit Delete
+        document.getElementById("editDelete").addEventListener("click", function() {
+            console.log("coucou")
+            var edDelete = true;
+            $.ajax({
+                synch: 'true',
+                url: urlmodify_biblio,
+                type: 'POST',
+                data: {
+                    'id': data['id'],
+                    'edDelete': edDelete,
+                },
+                dataType: 'json',
+                success: function (responseData) {
+                    window.location.reload()
+                }
+            });
+
+        }, false);
 
     } catch (error) {
         console.error('no json');

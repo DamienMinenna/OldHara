@@ -178,6 +178,10 @@ body {
     transform: translateX(2px);
 }
 
+.btn-sidebar-top-text:focus .btn-sidebar-top-text:hover, .btn-sidebar-top-text:link{
+    color: #dddddd !important;
+}
+
 .badge-sidebar-top{
     font-size: 10px;
     margin-left: -5px; 
@@ -258,6 +262,7 @@ body {
 
 .detail-editable{
     border: 1px solid #ececec;
+    min-width: 10px;
     border-radius: 5px;
     background: #fdfdfd;
     transition: transform 250ms ease 0s;

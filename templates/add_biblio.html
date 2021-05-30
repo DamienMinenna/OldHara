@@ -22,6 +22,7 @@
           <div class="fallback">
             <input name="file" type="file" multiple />
           </div>
+          Select a folder: 
           <select id='dropzone-folder' name='dropzone_folder'>
             {% for path_i in paths %}
               <option value='{{ path_i.id }}'>{{ path_i.path }}</option>

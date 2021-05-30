@@ -10,7 +10,9 @@
       
       <br>
 
-    
+      <div>
+        <embed src="{{ 'media/'|add:file_to_sort.0.file.name }}" width="100%" height="350px" />
+      </div>
 
 
     </div>
@@ -21,14 +23,16 @@
       <div class="table-responsive">
         <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="tableList">
           <thead class="table-header">
-            <tr>
-              <th width="50px">id</th>
+            <tr>             
+              <th width="150px">Upload on</th>
+              <th width="800px">File name</th>
             </tr>
           </thead>
           <tbody>
           {% for file_i in file_to_sort %}
             <tr id="listToSort_{{ file_i.id }}" class="table-item">
-              <td id="appadd">{{ file_i.id }}</td>
+              <td id="appadd">{{ file_i.created_on }}</td>
+              <td id="appadd">{{ file_i.file.name }}</td>
             </tr>
           {% endfor %}
           </tbody>
