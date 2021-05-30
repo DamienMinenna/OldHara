@@ -12,8 +12,16 @@
       <h4>Dropzone</h4>
 
       <div>
-        <form action="/add_biblio" class="dropzone" id="my-awesome-dropzone">
+        <form action="/add_biblio" class="dropzone" id="myAwesomeDropzone">
           {% csrf_token %}
+          <div class="dz-message">
+            Drop files here or click to upload.<br />
+            <span class="note">(Please upload <strong>PDF, JPG, GIF, PNG</strong> files only.)</span>
+          </div>
+
+          <div class="fallback">
+            <input name="file" type="file" multiple />
+          </div>
           <select id='dropzone-folder' name='dropzone_folder'>
             {% for path_i in paths %}
               <option value='{{ path_i.id }}'>{{ path_i.path }}</option>
@@ -21,6 +29,38 @@
           </select>
         </form>
       </div>
+
+      <span id="alertFileAdded"></span>
+
+      <script type="text/javascript">
+
+        Dropzone.autoDiscover = false;
+
+        Dropzone.options.myAwesomeDropzone = {
+            url: "/add_biblio",
+            paramName: "file",
+            acceptedFiles: 'image/*,application/pdf',
+            params: {
+                
+            },
+            init: function() {
+                this.on("addedfile", function(file) {
+                  // console.log("Added file."); 
+                }),
+                this.on("success", function(file, response) {
+                    console.log(response);
+                    var countFileStore = response['countFileStore']
+                    $("#alertFileAdded").html("<div class='alert alert-success' role='alert'>New file added! </div>");
+                    $("#FileStore").html(countFileStore);
+
+                })
+            }
+        }       
+
+      $('#myAwesomeDropzone').dropzone();
+
+
+      </script>
 
       <hr>
 
@@ -56,16 +96,16 @@
 
       {% if isDOICreated %}
         <div class="alert alert-success" role="alert">
-        The entry is created!
-        <br>
-        <br>
-        Title: <b>{{ refs.0.getTitle }}</b>
-        <br>
-        Authors: {{ refs.0.getAuthors_list }}
-        <br>
-        Journal: {{ refs.0.getJournal }}
-        <br>
-        Date: {{ refs.0.getDate }}
+          The entry is created!
+          <br>
+          <br>
+          Title: <b>{{ refs.0.getTitle }}</b>
+          <br>
+          Authors: {{ refs.0.getAuthors_list }}
+          <br>
+          Journal: {{ refs.0.getJournal }}
+          <br>
+          Date: {{ refs.0.getDate }}
         </div>
       {% endif %}
       {% if isDOIExist %}

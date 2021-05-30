@@ -29,7 +29,6 @@ def view_home(request):
         if 'nameFolder' in request.POST:
             # create a form instance and populate it with data from the request:
             form_addfolder = addfolderForm(request.POST)
-            form_doi = addDOIForm()
             # check whether it's valid:
             if form_addfolder.is_valid():
 
@@ -49,26 +48,24 @@ def view_home(request):
 
         else:
             form_addfolder = addfolderForm()
-            form_doi = addDOIForm()
 
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form_addfolder = addfolderForm()
-        form_doi = addDOIForm()
 
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
-    file_to_sort = FileStore.objects.order_by('id')
+    countFileStore = FileStore.objects.order_by('id').count()
 
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
         'folder_list': folder_list,
-        'file_to_sort' : file_to_sort,
+        'countFileStore' : countFileStore,
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
@@ -107,7 +104,10 @@ def view_add_biblio(request):
             os.rename(initial_path, new_path)
             c.save()
 
-            print('SAVED in ', c.file.name, c.file.path, new_path)
+            return JsonResponse({
+                'fileAdded' : True,
+                'countFileStore' : int(FileStore.objects.order_by('id').count())
+            })
 
 
         if 'nameFolder' in request.POST:
@@ -199,14 +199,16 @@ def view_add_biblio(request):
 
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
-    file_to_sort = FileStore.objects.order_by('id')
+    countFileStore = FileStore.objects.order_by('id').count()
 
     return render(request, template_name,{
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
-        'file_to_sort' : file_to_sort,
+        'folder_list': folder_list,
+        'countFileStore' : countFileStore,
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
@@ -214,6 +216,65 @@ def view_add_biblio(request):
         'isDOICreated': isDOICreated,
         'isDOIExist': isDOIExist,
         'isDOInotValid': isDOInotValid,
+        })
+
+
+def view_check_biblio(request):
+    """
+    View for check the files
+    """
+    template_name = 'check_biblio.html'
+
+    isCreated = False
+    isExist = False
+    isModaladdfolder = False
+    if request.method == 'POST':
+
+        if 'nameFolder' in request.POST:
+            # create a form instance and populate it with data from the request:
+            form_addfolder = addfolderForm(request.POST)
+            form_doi = addDOIForm()
+            # check whether it's valid:
+            if form_addfolder.is_valid():
+
+                nameFolder = request.POST['nameFolder']
+                path = str('media/') + nameFolder
+
+                if not os.path.exists(path):
+                    os.mkdir(path)
+
+                    b = Path_Biblio(path = nameFolder)
+                    b.save()
+
+                    isCreated = True
+                else:
+                    isExist = True
+                isModaladdfolder = True
+
+
+        else:
+            form_addfolder = addfolderForm()
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form_addfolder = addfolderForm()
+
+    refs = Biblio.objects.order_by('-created_on')
+    paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
+
+    file_to_sort = FileStore.objects.order_by('id')
+
+    return render(request, template_name,{
+        'refs' : refs,
+        'form_addfolder' : form_addfolder,
+        'paths': paths,
+        'folder_list': folder_list,
+        'file_to_sort' : file_to_sort,
+        'isCreated': isCreated,
+        'isExist': isExist,
+        'isModaladdfolder': isModaladdfolder,
         })
 
 @csrf_exempt
