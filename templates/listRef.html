@@ -16,18 +16,17 @@
     {% for ref_i in refs %}
       <tr id="listRef_{{ ref_i.id }}" class="table-item">
         <td id="appadd">{{ ref_i.json_payload }} </td>
-        <!-- <td id="appadd">{{ ref_i }} </td> -->
         <td id="appadd">
         {% if ref_i.mainFile %}
-        <a type="button" href="{{ 'media/'|add:ref_i.mainFile.name }}" target="_blank">
+        <a type="button" href="{{ 'media/'|add:ref_i.file.name }}" target="_blank">
           <i class="far fa-file-pdf"></i>
         </a>
         {% endif %}
         </td>
-        <td id="appadd">{{ ref_i.getAuthors_list }}</td>
-        <td id="appadd">{{ ref_i.getTitle }}</td>
-        <td id="appadd">{{ ref_i.getDate }}</td>
-        <td id="appadd">{{ ref_i.getJournal }}</td>
+        <td id="appadd">{{ ref_i.db.listauthor }}</td>
+        <td id="appadd">{{ ref_i.db.title }}</td>
+        <td id="appadd">{{ ref_i.db.dateY }}</td>
+        <td id="appadd">{{ ref_i.db.journal }}</td>
       </tr>
     {% endfor %}
     </tbody>

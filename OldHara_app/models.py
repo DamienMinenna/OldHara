@@ -25,74 +25,60 @@ TYPE = (
     (11,"posted-content"),
     (12,"standard"),
     (13,"other"),
-)
+    )
 
-TYPE_LIST = [ 
-    'journal-article', 
-    'proceedings-article',
-    'dissertation',
-    'book-chapter',
-    'book',
-    'report',
-    'dataset',
-    'component',
-    'reference-entry',
-    'monograph',
-    'peer-review',
-    'posted-content',
-    'standard',
-    'other',    
-    ]
+# TYPE_LIST = [ 
+#     'journal-article', 
+#     'proceedings-article',
+#     'dissertation',
+#     'book-chapter',
+#     'book',
+#     'report',
+#     'dataset',
+#     'component',
+#     'reference-entry',
+#     'monograph',
+#     'peer-review',
+#     'posted-content',
+#     'standard',
+#     'other',    
+#     ]
 
 class Path_Biblio(models.Model):
-    path = models.CharField(max_length=100, unique=True)
+    path = models.CharField(max_length=1000, unique=True)
 
     def __str__(self):
         return self.path
 
 class FileStore(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
     folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
     file = models.FileField(upload_to = 'toSort/',blank=True)
+
+    def __str__(self):
+        return self.created_on
+
+class LabelHara(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
 class Biblio(models.Model):
     # slug = models.SlugField(max_length=200, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=STATUS, default=0)
-    type = models.IntegerField(choices=TYPE, default=0)
+    status = models.IntegerField(choices = STATUS, default=0)
+    type = models.IntegerField(choices = TYPE, default=0)
+
+    db = models.JSONField(null = True)        # Main database for the App
+    file = models.FileField(upload_to='toSort/',blank=True) 
 
     data = models.JSONField(null=True)
     title = models.TextField()
-    json_payload = models.TextField(blank=True)
+    json_payload = models.TextField(blank = True)
 
     folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
 
+    note = models.TextField(blank = True)
 
-    # authors = models.TextField(blank=True) # A modifier
-    # journal = models.TextField(blank=True)
-    # journalAbbr = models.TextField(blank=True)
-    # volume = models.TextField(blank=True)
-    # pages = models.TextField(blank=True)
-    # date = models.TextField(blank=True)
-    doi = models.TextField(blank=True)
-    url = models.URLField(blank=True)
-
-    # language = models.TextField(blank=True)
-    keyword = models.TextField(blank=True)
-    abstract = models.TextField(blank=True)
-
-    mainFile = models.FileField(upload_to='toSort/',blank=True)
-
-    # os.rename(model.mainFile.path, new_name)
-    # model.mainFile.name = new_name
-    # model.save()
-
-
-
-    # mainFilename = models.CharField(max_length=1000,blank=True)
-
-    note = models.TextField(blank=True)
-
-    label = models.TextField(blank=True) # A modifier
+    # label = models.ForeignKey(LabelHara, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-created_on']

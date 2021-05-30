@@ -70,14 +70,16 @@ function change_table(responseData) {
     let html
     html = "<td id='appadd'>" + JSON.stringify(responseData) + "</td>"
     + "<td id='appadd'></td>"
-    + "<td id='appadd'>" + getAuthors_table(responseData) + "</td>"
-    + "<td id='appadd'>" + responseData['message']['title'] + "</td>"
-    + "<td id='appadd'>" + getDate_table(responseData) + "</td>"
-    + "<td id='appadd'>" + getJournal(responseData) + "</td>";
+    + "<td id='appadd'>" + responseData['listauthor'] + "</td>"
+    + "<td id='appadd'>" + responseData['title'] + "</td>"
+    + "<td id='appadd'>" + responseData['dateY'] + "</td>"
+    + "<td id='appadd'>" + responseData['journal'] + "</td>";
     return html
 }
 
 $("#tableList").on('click', 'tr', function()  {
+
+    
 
     // Remove class table-selected 
     var table = document.getElementById("tableList");
@@ -90,26 +92,28 @@ $("#tableList").on('click', 'tr', function()  {
 
     var data = $(this).find('td:first-child').text();
     try {
+        
         data = JSON.parse(data)
 
-        $('#detail_folder').html("<div id='editFolder' class='detail-editable'>" + data['OldHara']['folder'] + "</div>");
-        $('#detail_type').html(data['message']['type']);
-        $('#detail_title').html("<div contenteditable='true' id='editTitle' class='detail-editable'>" + data['message']['title'] + "</div>");
-        $('#detail_authors').html(getAuthors(data));
-        $('#detail_journal').html(getJournal(data));
-        $('#detail_date').html(getDate(data));
-        $('#detail_volume').html("<div contenteditable='true' id='editVolume' class='detail-editable'>" + data['message']['volume'] + "</div>");
-        $('#detail_issue').html("<div contenteditable='true' id='editIssue' class='detail-editable'>" + data['message']['issue'] + "</div>");
-        $('#detail_page').html("<div contenteditable='true' id='editPage' class='detail-editable'>" + data['message']['page'] + "</div>");
-        $('#detail_artnumber').html("<div contenteditable='true' id='editArtNumb' class='detail-editable'>" + data['message']['article-number'] + "</div>");
+        $('#detail_folder').html("<div id='editFolder' class='detail-editable'>" + data['folder'] + "</div>");
+        $('#detail_type').html(data['type']);
+        $('#detail_title').html("<div contenteditable='true' id='editTitle' class='detail-editable'>" + data['title'] + "</div>");
+        $('#detail_authors').html(data['listauthor']);
+        $('#detail_journal').html(data['journal']);
+        $('#detail_date').html(data['dateY']);
+        $('#detail_volume').html("<div contenteditable='true' id='editVolume' class='detail-editable'>" + data['volume'] + "</div>");
+        $('#detail_issue').html("<div contenteditable='true' id='editIssue' class='detail-editable'>" + data['issue'] + "</div>");
+        $('#detail_page').html("<div contenteditable='true' id='editPage' class='detail-editable'>" + data['page'] + "</div>");
+        $('#detail_artnumber').html("<div contenteditable='true' id='editArtNumb' class='detail-editable'>" + data['articlenumber'] + "</div>");
 
-        $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['message']['DOI'] + "'>" + data['message']['DOI'] + "</a>");
-        $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['message']['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['message']['DOI'] + " class='altmetric-embed'></div>");
+        $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['DOI'] + "'>" + data['DOI'] + "</a>");
+        $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['DOI'] + " class='altmetric-embed'></div>");
         
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 
-        $("#listRef_"+data['OldHara']['id']).addClass("table-selected");
+            
+        $("#listRef_"+data['id']).addClass("table-selected");
 
         // Edit Title
         document.getElementById("editTitle").addEventListener("input", function() {
@@ -119,14 +123,14 @@ $("#tableList").on('click', 'tr', function()  {
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
-                    'id': data['OldHara']['id'],
+                    'id': data['id'],
                     'title': edtitle,
                 },
                 dataType: 'json',
                 success: function (responseData) {
                     let html_table;
                     html_table = change_table(responseData);
-                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    $("#listRef_"+data['id']).html(html_table);
                 }
             });
 
@@ -140,14 +144,14 @@ $("#tableList").on('click', 'tr', function()  {
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
-                    'id': data['OldHara']['id'],
+                    'id': data['id'],
                     'volume': edvolume,
                 },
                 dataType: 'json',
                 success: function (responseData) {
                     let html_table;
                     html_table = change_table(responseData);
-                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    $("#listRef_"+data['id']).html(html_table);
                 }
             });
 
@@ -161,14 +165,14 @@ $("#tableList").on('click', 'tr', function()  {
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
-                    'id': data['OldHara']['id'],
+                    'id': data['id'],
                     'issue': edissue,
                 },
                 dataType: 'json',
                 success: function (responseData) {
                     let html_table;
                     html_table = change_table(responseData);
-                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    $("#listRef_"+data['id']).html(html_table);
                 }
             });
 
@@ -182,14 +186,14 @@ $("#tableList").on('click', 'tr', function()  {
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
-                    'id': data['OldHara']['id'],
+                    'id': data['id'],
                     'page': edpage,
                 },
                 dataType: 'json',
                 success: function (responseData) {
                     let html_table;
                     html_table = change_table(responseData);
-                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    $("#listRef_"+data['id']).html(html_table);
                 }
             });
 
@@ -203,14 +207,14 @@ $("#tableList").on('click', 'tr', function()  {
                 url: urlmodify_biblio,
                 type: 'POST',
                 data: {
-                    'id': data['OldHara']['id'],
+                    'id': data['id'],
                     'ArtNumb': edArtNumb,
                 },
                 dataType: 'json',
                 success: function (responseData) {
                     let html_table;
                     html_table = change_table(responseData);
-                    $("#listRef_"+data['OldHara']['id']).html(html_table);
+                    $("#listRef_"+data['id']).html(html_table);
                 }
             });
 
@@ -223,10 +227,10 @@ $("#tableList").on('click', 'tr', function()  {
             html_folderlist = "<form action='' method='POST' id='formSelectFolder'>"
                 + csrf_token_folder
                 + "<select id='selectFolder' name='folder' onchange='this.form.submit()'>"
-                + "<option value='" + data['OldHara']['folder'] + "'>" + data['OldHara']['folder'] + "</option>";
+                + "<option value='" + data['folder'] + "'>" + data['folder'] + "</option>";
             
             for(i = 0; i < folder_list.length; i++){
-                if(!(folder_list[i] == data['OldHara']['folder'])){
+                if(!(folder_list[i] == data['folder'])){
                     html_folderlist += "<option value='" + folder_list[i] + "'>" + folder_list[i] + "</option>"
                 }
             };
@@ -241,14 +245,14 @@ $("#tableList").on('click', 'tr', function()  {
                         type: "POST",
                         url: urlmodify_biblio,
                         data: {
-                            'id': data['OldHara']['id'],
+                            'id': data['id'],
                             'folder': $("#selectFolder").val()
                         },
                         dataType: 'json',
                         success: function(responseData) {
                             let html_table;
                             html_table = change_table(responseData);
-                            $("#listRef_"+data['OldHara']['id']).html(html_table);
+                            $("#listRef_"+data['id']).html(html_table);
                         }
                     });
                     return false;

@@ -16,6 +16,24 @@
     </div>
     <div class="col-3 detail-right" id="main_detail">
         
+      <br>
+
+      <div class="table-responsive">
+        <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="tableList">
+          <thead class="table-header">
+            <tr>
+              <th width="50px">id</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for file_i in file_to_sort %}
+            <tr id="listToSort_{{ file_i.id }}" class="table-item">
+              <td id="appadd">{{ file_i.id }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   </div>
