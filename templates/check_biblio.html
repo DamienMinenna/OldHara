@@ -10,8 +10,8 @@
       
       <br>
 
-      <div>
-        <embed src="{{ 'media/'|add:file_to_sort.0.file.name }}" width="100%" height="350px" />
+      <div class="zone_filePDF">
+        <embed src="{{ file_selected.file.url }}" width="100%" height="350px" />
       </div>
 
 
@@ -21,18 +21,27 @@
       <br>
 
       <div class="table-responsive">
-        <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="tableList">
+        <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="table_checkBiblio">
           <thead class="table-header">
             <tr>             
-              <th width="150px">Upload on</th>
+              <th width="0px"></th>
+              <th width="160px">Upload on</th>
               <th width="800px">File name</th>
+              <th width="70px">Remove</th>
             </tr>
           </thead>
           <tbody>
           {% for file_i in file_to_sort %}
-            <tr id="listToSort_{{ file_i.id }}" class="table-item">
+            <tr id="listToSort_{{ file_i.id }}" class="table-item {% if file_i.id == file_selected.id %} table-selected {% endif %} ">
+              <td id="appadd">{{ file_i.id }}</td>
               <td id="appadd">{{ file_i.created_on }}</td>
               <td id="appadd">{{ file_i.file.name }}</td>
+              <td id="appadd">
+                <form action="/check_biblio" method="post">
+                  {% csrf_token %}
+                  <button name="del_toSort" value="{{ file_i.id }}"><span class='fas fa-trash-alt'></span></button>
+                </form>
+              </td>
             </tr>
           {% endfor %}
           </tbody>

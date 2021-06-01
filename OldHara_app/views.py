@@ -1,7 +1,8 @@
 import os
-import requests
 import json
 import ntpath
+import PyPDF2
+
 
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -138,7 +139,7 @@ def view_add_biblio(request):
         })
 
 
-def view_check_biblio(request):
+def view_check_biblio(request,num=-1):
     """
     View for check the files
     """
@@ -156,16 +157,47 @@ def view_check_biblio(request):
         else:
             form_addfolder = addfolderForm()
 
+        if 'del_toSort' in request.POST:
+            id_toDel = request.POST['del_toSort']
+            t = FileStore.objects.get(id = id_toDel)
+            t.delete()
+
+
     # Create blank forms
     else:
         form_addfolder = addfolderForm()
+
 
     refs = Biblio.objects.order_by('-created_on')
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
     countFileStore = FileStore.objects.order_by('id').count()
-    file_to_sort = FileStore.objects.order_by('-id')
+    file_to_sort = FileStore.objects.order_by('-created_on')
+
+#############
+# TEST
+
+    # creating an object 
+    filepath = "media/" + file_to_sort[0].file.name
+    file2read = open(filepath, 'rb')
+
+    # creating a pdf reader object
+    fileReader = PyPDF2.PdfFileReader(file2read)
+
+    # print the number of pages in pdf file
+    print(fileReader.numPages)
+
+    print(fileReader.getPage(0).extractText().split())
+
+
+##############
+
+    if num == -1:
+        file_selected = ''
+    else:
+        file_selected = FileStore.objects.get(id = num)
+
 
     return render(request, template_name,{
         'refs' : refs,
@@ -174,6 +206,7 @@ def view_check_biblio(request):
         'folder_list': folder_list,
         'countFileStore' : countFileStore,
         'file_to_sort' : file_to_sort,
+        'file_selected' : file_selected,
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,

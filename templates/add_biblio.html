@@ -16,7 +16,7 @@
           {% csrf_token %}
           <div class="dz-message">
             Drop files here or click to upload.<br />
-            <span class="note">(Please upload <strong>PDF, JPG, GIF, PNG</strong> files only.)</span>
+            <span class="note">(Please upload <strong>PDF</strong> files only.)</span>
           </div>
 
           <div class="fallback">
@@ -40,7 +40,8 @@
         Dropzone.options.myAwesomeDropzone = {
             url: "/add_biblio",
             paramName: "file",
-            acceptedFiles: 'image/*,application/pdf',
+            // acceptedFiles: 'image/*,application/pdf',
+            acceptedFiles: 'application/pdf',
             params: {
                 
             },

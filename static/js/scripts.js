@@ -18,53 +18,6 @@ function openMenu() {
 }
 
 
-// retrive database
-function getAuthors(data) {
-    let authors;
-    if (typeof data['message']['author'] != "undefined") {
-        for(var key in data['message']['author']){
-            authors +=  data['message']['author'][key]['given'] + ' ' + data['message']['author'][key]['family'] + ', '
-        }
-        return authors.slice(0, -2).substring(9);
-    }
-    return "undefined"
-}
-
-function getAuthors_table(data) {
-    let authors;
-    if (typeof data['message']['author'] != "undefined") {
-        for(var key in data['message']['author']){
-            authors +=  data['message']['author'][key]['family'] + ', ' + data['message']['author'][key]['given'] + '; '
-        }
-        return authors.slice(0, -2).substring(9);
-    }
-    return ""
-}
-
-function getJournal(data) {
-    if (typeof data['message']['container-title'] != "undefined") {
-        return data['message']['container-title'][0];
-    }
-    return "undefined";
-}
-
-function getDate(data) {
-    if (typeof data['message']['issued'] != "undefined") {
-        if (typeof data['message']['issued']['date-parts'] != "undefined") {
-            return data['message']['issued']['date-parts'];
-        }
-    }
-    return "undefined";
-}
-
-function getDate_table(data) {
-    if (typeof data['message']['issued'] != "undefined") {
-        if (typeof data['message']['issued']['date-parts'] != "undefined") {
-            return data['message']['issued']['date-parts'][0][0];
-        }
-    }
-    return "";
-}
 
 function change_table(responseData) {
     let html
@@ -100,7 +53,9 @@ $("#tableList").on('click', 'tr', function()  {
         $('#detail_title').html("<div contenteditable='true' id='editTitle' class='detail-editable'>" + data['title'] + "</div>");
         $('#detail_authors').html(data['listauthor']);
         $('#detail_journal').html(data['journal']);
-        $('#detail_date').html(data['dateY']);
+        $('#detail_dateD').html(data['dateD']);
+        $('#detail_dateM').html(data['dateMword']);
+        $('#detail_dateY').html(data['dateY']);
         $('#detail_volume').html("<div contenteditable='true' id='editVolume' class='detail-editable'>" + data['volume'] + "</div>");
         $('#detail_issue').html("<div contenteditable='true' id='editIssue' class='detail-editable'>" + data['issue'] + "</div>");
         $('#detail_page').html("<div contenteditable='true' id='editPage' class='detail-editable'>" + data['page'] + "</div>");
@@ -266,7 +221,6 @@ $("#tableList").on('click', 'tr', function()  {
 
         // Edit Delete
         document.getElementById("editDelete").addEventListener("click", function() {
-            console.log("coucou")
             var edDelete = true;
             $.ajax({
                 synch: 'true',
@@ -285,9 +239,27 @@ $("#tableList").on('click', 'tr', function()  {
         }, false);
 
     } catch (error) {
-        console.error('no json');
+        console.error('ERROR: no json');
         
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
     }
+});
+
+$("#table_checkBiblio").on('click', 'tr', function()  {
+
+    // // Remove class table-selected 
+    // var table = document.getElementById("table_checkBiblio");
+    // for (var i = 1, row; row = table.rows[i]; i++) {
+    //     var idTable = table.rows[i].id
+    //     if($("#" + idTable).hasClass("table-selected")){
+    //         $("#" + idTable).removeClass("table-selected")
+    //     }
+    // }
+
+    var id_checkBiblio = $(this).find('td:first-child').text();
+    // $("#listToSort_" + id_checkBiblio).addClass("table-selected");
+    var url = '/check_biblio/' + id_checkBiblio
+    window.location.href = url;
+
 });
