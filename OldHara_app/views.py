@@ -1,8 +1,11 @@
 import os
+import sys
 import json
 import ntpath
 import PyPDF2
-
+from PIL import Image
+import pytesseract
+from pdf2image import convert_from_path
 
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -73,15 +76,13 @@ def view_add_biblio(request):
     isDOInotValid = False
     if request.method == 'POST':
 
-        if 'dropzone_folder' in request.POST: #not(request.FILES is None):
-            # print(request.POST)
-            # print(request.FILES)
+        if 'dropzone_folder' in request.POST: 
             folder = request.POST['dropzone_folder']
             
             uploaded_file = request.FILES['file']
             c = FileStore(
                 folder = Path_Biblio.objects.get(id = folder),
-                file=uploaded_file, 
+                file = uploaded_file, 
             )
             c.save()
 
@@ -175,28 +176,34 @@ def view_check_biblio(request,num=-1):
     countFileStore = FileStore.objects.order_by('id').count()
     file_to_sort = FileStore.objects.order_by('-created_on')
 
-#############
-# TEST
-
-    # creating an object 
-    filepath = "media/" + file_to_sort[0].file.name
-    file2read = open(filepath, 'rb')
-
-    # creating a pdf reader object
-    fileReader = PyPDF2.PdfFileReader(file2read)
-
-    # print the number of pages in pdf file
-    print(fileReader.numPages)
-
-    print(fileReader.getPage(0).extractText().split())
-
-
-##############
 
     if num == -1:
         file_selected = ''
+        text_PDF = ''
     else:
+
+
         file_selected = FileStore.objects.get(id = num)
+        filepath = "media/" + file_selected.file.name
+
+        # PyPDF2
+        # try:
+        #     file2read = open(filepath, 'rb')
+
+        #     # creating a pdf reader object
+        #     fileReader = PyPDF2.PdfFileReader(file2read)
+
+        #     # print the number of pages in pdf file
+        #     print(fileReader.numPages)
+
+        #     text_PDF = fileReader.getPage(0).extractText().split()
+        # except:
+        #     text_PDF = ''
+
+        # pytesseract
+        pages = convert_from_path(filepath, 500)
+        pages[0].save('temp.jpg', 'JPEG')
+        text_PDF = str(((pytesseract.image_to_string(Image.open('temp.jpg')))))
 
 
     return render(request, template_name,{
@@ -210,6 +217,7 @@ def view_check_biblio(request,num=-1):
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
+        'text_PDF': text_PDF,
         })
 
 @csrf_exempt

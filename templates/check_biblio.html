@@ -10,10 +10,20 @@
       
       <br>
 
+      <div class="text-center" id="loader_check_biblio">
+        Loading...
+        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </div>
+
       <div class="zone_filePDF">
         <embed src="{{ file_selected.file.url }}" width="100%" height="350px" />
       </div>
 
+      <hr>
+
+      <div>
+        {{ text_PDF }}
+      </div>
 
     </div>
     <div class="col-3 detail-right" id="main_detail">
