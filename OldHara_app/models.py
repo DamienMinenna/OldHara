@@ -6,26 +6,27 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 STATUS = (
-    (0,"Need revision"),
-    (1,"Validated")
+    (0,"Validated"),
+    (1,"Missing DOI"),
+    (2,"No DOI")
 )
 
-TYPE = (
-    (0,"journal-article"),
-    (1,"proceedings-article"),
-    (2,"dissertation"),
-    (3,"book-chapter"),
-    (4,"book"),
-    (5,"report"),
-    (6,"dataset"),
-    (7,"component"),
-    (8,"reference-entry"),
-    (9,"monograph"),
-    (10,"peer-review"),
-    (11,"posted-content"),
-    (12,"standard"),
-    (13,"other"),
-    )
+# TYPE = (
+#     (0,"journal-article"),
+#     (1,"proceedings-article"),
+#     (2,"dissertation"),
+#     (3,"book-chapter"),
+#     (4,"book"),
+#     (5,"report"),
+#     (6,"dataset"),
+#     (7,"component"),
+#     (8,"reference-entry"),
+#     (9,"monograph"),
+#     (10,"peer-review"),
+#     (11,"posted-content"),
+#     (12,"standard"),
+#     (13,"other"),
+#     )
 
 # TYPE_LIST = [ 
 #     'journal-article', 
@@ -65,14 +66,24 @@ class Biblio(models.Model):
     # slug = models.SlugField(max_length=200, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices = STATUS, default=0)
-    type = models.IntegerField(choices = TYPE, default=0)
+    title = models.TextField()
+
+    doi = models.TextField(blank = True)
+
+    # To delete!
+    #type = models.IntegerField(choices = TYPE, default=0)
+
+    db_CrossRef = models.JSONField(null = True)        # Main database for the App
 
     db = models.JSONField(null = True)        # Main database for the App
-    file = models.FileField(upload_to='toSort/',blank=True) 
 
-    data = models.JSONField(null=True)
-    title = models.TextField()
-    json_payload = models.TextField(blank = True)
+    # to del
+    #data = models.JSONField(null = True)        # Main database for the App
+
+
+    db_text = models.TextField(blank = True)
+
+    file = models.FileField(upload_to='toSort/',blank=True) 
 
     folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
 

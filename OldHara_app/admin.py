@@ -5,8 +5,8 @@ from .models import Biblio, Path_Biblio
 
 
 class BiblioAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status','type','created_on')
-    list_filter = ("status",'type')
+    list_display = ('title', 'status','created_on')
+    list_filter = ("status",)
     search_fields = ['title', 'abstract']
 
 admin.site.register(Biblio, BiblioAdmin)

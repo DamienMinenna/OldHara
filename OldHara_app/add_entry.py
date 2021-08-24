@@ -4,16 +4,16 @@ import requests
 from .models import Biblio, Path_Biblio
 from .forms import addDOIForm
 
-def add_doi_to_db(r, folder):
+def add_doi_to_db(r, folder, nameDOI):
     d = json.loads(r.text)  # r.text == <class 'str'>  and d == <class 'dict'>
     title_newentry = str(d['message']['title'][0])
 
     c = Biblio(
         title = title_newentry,
-        data = d,
-        json_payload = r.text,
+        db_CrossRef = d,
         folder = Path_Biblio.objects.get(id = folder),
         status = 1,
+        doi = nameDOI,
     )
 
     c.save()
@@ -119,10 +119,7 @@ def add_doi_to_db(r, folder):
             temp["author"] = temp_list
     
     c.db = temp # Main Old Hara db
-    c.json_payload = json.dumps(temp)
-
-    d["OldHara"] = temp
-    c.data = d
+    c.db_text = json.dumps(temp)
     
     c.save()
 
@@ -142,7 +139,7 @@ def add_doi(request):
 
         # check if DOI exist
         for ref_i in refs:
-            refidoi = ref_i.getDOI()
+            refidoi = ref_i.doi
 
             if refidoi == nameDOI:
                 isDOIExist = True
@@ -155,7 +152,7 @@ def add_doi(request):
                     isDOInotValid = False
                     isDOICreated = True
 
-                    add_doi_to_db(r, folder)
+                    add_doi_to_db(r, folder, nameDOI)
                     
                 else:
                     isDOInotValid = True

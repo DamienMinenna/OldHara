@@ -231,7 +231,7 @@ def modify_biblio(request):
 
     if 'title' in request.POST:
         t.db["title"] = request.POST['title'].rstrip("\n")
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.save()
 
         responseData = t.db
@@ -239,7 +239,7 @@ def modify_biblio(request):
 
     elif 'volume' in request.POST:
         t.db['volume'] = str(request.POST['volume']).rstrip("\n")
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.save()
 
         responseData = t.db
@@ -247,7 +247,7 @@ def modify_biblio(request):
 
     elif 'issue' in request.POST:
         t.db["issue"] = request.POST['issue'].rstrip("\n")
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.save()
 
         responseData = t.db
@@ -255,7 +255,7 @@ def modify_biblio(request):
 
     elif 'page' in request.POST:
         t.db["page"] = request.POST['page'].rstrip("\n")
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.save()
 
         responseData = t.db
@@ -263,7 +263,7 @@ def modify_biblio(request):
 
     elif 'ArtNumb' in request.POST:
         t.db["articlenumber"] = request.POST['ArtNumb'].rstrip("\n")
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.save()
 
         responseData = t.db
@@ -271,7 +271,7 @@ def modify_biblio(request):
 
     elif 'folder' in request.POST:
         t.db["folder"] = request.POST['folder']
-        t.json_payload = json.dumps(t.db)
+        t.db_text = json.dumps(t.db)
         t.folder = Path_Biblio.objects.get(path=request.POST['folder'])
         t.save()
 
