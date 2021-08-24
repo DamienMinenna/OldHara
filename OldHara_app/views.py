@@ -17,7 +17,8 @@ from .models import Biblio, Path_Biblio
 from .forms import addfolderForm, addDOIForm
 
 from .add_folder import add_folder
-from .add_entry import add_doi, add_file_from_dropzone
+from .add_entry import add_doi, add_file_from_dropzone, check_doi
+from .read_file_for_db import read_metadata, read_firstpages
 
 # Create your views here.
 
@@ -126,7 +127,7 @@ def view_add_biblio(request):
         })
 
 
-def view_check_biblio(request,num=-1):
+def view_check_biblio(request, num=-1):
     """
     View for check the files
     """
@@ -165,32 +166,17 @@ def view_check_biblio(request,num=-1):
 
     if num == -1:
         file_selected = ''
-        text_PDF = ''
+        doi = ''
     else:
-
-
         file_selected = Biblio.objects.get(id = num)
-        filepath = "media/" + file_selected.file.name
+        doi = read_metadata(file_selected)
 
-        # PyPDF2
-        # try:
-        #     file2read = open(filepath, 'rb')
+        if doi == '':
+            doi = read_firstpages(file_selected)
 
-        #     # creating a pdf reader object
-        #     fileReader = PyPDF2.PdfFileReader(file2read)
 
-        #     # print the number of pages in pdf file
-        #     print(fileReader.numPages)
-
-        #     text_PDF = fileReader.getPage(0).extractText().split()
-        # except:
-        #     text_PDF = ''
-
-        # pytesseract
-        pages = convert_from_path(filepath, 500)
-        pages[0].save('temp.jpg', 'JPEG')
-        text_PDF = str(((pytesseract.image_to_string(Image.open('temp.jpg')))))
-
+        if doi != '':
+            doi = check_doi(doi)
 
     return render(request, template_name,{
         'refs' : refs,
@@ -203,7 +189,7 @@ def view_check_biblio(request,num=-1):
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
-        'text_PDF': text_PDF,
+        'pdf_info': doi,
         })
 
 @csrf_exempt

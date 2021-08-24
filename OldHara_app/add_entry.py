@@ -193,3 +193,9 @@ def add_doi(request):
                     isDOInotValid = True
 
     return form_doi, isDOIExist, isDOInotValid, isDOICreated
+
+
+def check_doi(nameDOI):
+    crossrefurl = 'https://api.crossref.org/v1/works/' + nameDOI
+    r = requests.get(crossrefurl)
+    return r.text
