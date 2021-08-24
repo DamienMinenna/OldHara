@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import ntpath
 import PyPDF2
 from PIL import Image
 import pytesseract
@@ -14,11 +13,11 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
-from .models import Biblio, Path_Biblio, FileStore
+from .models import Biblio, Path_Biblio
 from .forms import addfolderForm, addDOIForm
 
 from .add_folder import add_folder
-from .add_entry import add_doi
+from .add_entry import add_doi, add_file_from_dropzone
 
 # Create your views here.
 
@@ -49,7 +48,7 @@ def view_home(request):
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
-    countFileStore = FileStore.objects.order_by('id').count()
+    countFileStore = Biblio.objects.filter(status = 1).count()
 
     return render(request, template_name,{
         'refs' : refs,
@@ -77,25 +76,12 @@ def view_add_biblio(request):
     if request.method == 'POST':
 
         if 'dropzone_folder' in request.POST: 
-            folder = request.POST['dropzone_folder']
-            
-            uploaded_file = request.FILES['file']
-            c = FileStore(
-                folder = Path_Biblio.objects.get(id = folder),
-                file = uploaded_file, 
-            )
-            c.save()
 
-            initial_path = c.file.path
-            filename = ntpath.basename(c.file.name)
-            c.file.name = Path_Biblio.objects.get(id = folder).path + '/' +  filename
-            new_path = settings.MEDIA_ROOT + c.file.name
-            os.rename(initial_path, new_path)
-            c.save()
+            fileAdded = add_file_from_dropzone(request)
 
             return JsonResponse({
-                'fileAdded' : True,
-                'countFileStore' : int(FileStore.objects.order_by('id').count())
+                'fileAdded' : fileAdded,
+                'countFileStore' : int(Biblio.objects.filter(status = 1).count())
             })
 
         # Add folder
@@ -122,7 +108,7 @@ def view_add_biblio(request):
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
-    countFileStore = FileStore.objects.order_by('id').count()
+    countFileStore = Biblio.objects.filter(status = 1).count()
 
     return render(request, template_name,{
         'refs' : refs,
@@ -160,7 +146,7 @@ def view_check_biblio(request,num=-1):
 
         if 'del_toSort' in request.POST:
             id_toDel = request.POST['del_toSort']
-            t = FileStore.objects.get(id = id_toDel)
+            t = Biblio.objects.get(id = id_toDel)
             t.delete()
 
 
@@ -173,8 +159,8 @@ def view_check_biblio(request,num=-1):
     paths = Path_Biblio.objects.order_by('path')
     folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
 
-    countFileStore = FileStore.objects.order_by('id').count()
-    file_to_sort = FileStore.objects.order_by('-created_on')
+    countFileStore = Biblio.objects.filter(status = 1).count()
+    file_to_sort = Biblio.objects.filter(status = 1).order_by('-created_on')
 
 
     if num == -1:
@@ -183,7 +169,7 @@ def view_check_biblio(request,num=-1):
     else:
 
 
-        file_selected = FileStore.objects.get(id = num)
+        file_selected = Biblio.objects.get(id = num)
         filepath = "media/" + file_selected.file.name
 
         # PyPDF2

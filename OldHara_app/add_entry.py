@@ -1,8 +1,43 @@
+import os
 import json
 import requests
+import ntpath
+from django.conf import settings
 
 from .models import Biblio, Path_Biblio
 from .forms import addDOIForm
+
+def add_file_from_dropzone(request):
+    folder = request.POST['dropzone_folder']
+    uploaded_file = request.FILES['file']
+
+    c = Biblio(
+        title = uploaded_file.name,
+        status = 1,
+        folder = Path_Biblio.objects.get(id = folder),
+        file = uploaded_file, 
+    )
+    c.save()
+
+    initial_path = c.file.path
+    filename = ntpath.basename(c.file.name)
+    c.file.name = Path_Biblio.objects.get(id = folder).path + '/' +  filename
+    new_path = settings.MEDIA_ROOT + c.file.name
+    os.rename(initial_path, new_path)
+    c.save()
+
+    # Add info to db 
+    temp = {}
+    temp["id"] = c.id
+    temp["folder"] = c.folder.path
+    temp["title"] = uploaded_file.name
+    
+    c.db = temp # Main Old Hara db
+    c.db_text = json.dumps(temp)
+    c.save()
+
+    fileAdded = True
+    return fileAdded
 
 def add_doi_to_db(r, folder, nameDOI):
     d = json.loads(r.text)  # r.text == <class 'str'>  and d == <class 'dict'>
@@ -12,7 +47,7 @@ def add_doi_to_db(r, folder, nameDOI):
         title = title_newentry,
         db_CrossRef = d,
         folder = Path_Biblio.objects.get(id = folder),
-        status = 1,
+        status = 0,
         doi = nameDOI,
     )
 

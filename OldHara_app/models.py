@@ -7,8 +7,9 @@ from django.contrib.auth.models import User
 
 STATUS = (
     (0,"Validated"),
-    (1,"Missing DOI"),
-    (2,"No DOI")
+    (1,"Missing DOI with file"),
+    (2,"Missing DOI without file"),
+    (3,"No DOI available")
 )
 
 # TYPE = (
@@ -51,13 +52,13 @@ class Path_Biblio(models.Model):
     def __str__(self):
         return self.path
 
-class FileStore(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True)
-    folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
-    file = models.FileField(upload_to = 'toSort/',blank=True)
+# class FileStore(models.Model):
+#     created_on = models.DateTimeField(auto_now_add=True)
+#     folder = models.ForeignKey(Path_Biblio, on_delete=models.CASCADE)
+#     file = models.FileField(upload_to = 'toSort/',blank=True)
 
-    def __str__(self):
-        return self.created_on
+#     def __str__(self):
+#         return self.created_on
 
 class LabelHara(models.Model):
     name = models.CharField(max_length=100, unique=True)
