@@ -26,9 +26,9 @@
       {% if isBiblioSelected %}
         {% if isDOIValid %}
           <div class="alert alert-success" role="alert">
-            Reference found:
-            <br>
-            <br>
+
+            <h5>Reference found</h5>
+
             Title: <b>{{ doiTitle }}</b>
             <br>
             Authors: {{ doiAuthors }}
@@ -45,10 +45,9 @@
             </form>
         {% else %}
           <div class="alert alert-warning" role="alert">
-          No reference found...
+          <h5>No reference found</h5>
         {% endif %}
           
-            <br>
             <br>
 
             <form action="/check_biblio/{{ id_file }}/" method="post">
@@ -58,8 +57,45 @@
             </form>
 
           </div>
+          <div class="alert alert-secondary" role="alert">
+
+            <h5>Search engine</h5>
+
+            If the file DOI is not found, you can start a manual research. Recommanded keywords: full title.
+
+            <form action="/check_biblio/{{ id_file }}/" method="post">
+              {% csrf_token %}
+              {{ check_biblio_crossRefQuery }}
+              <input type="submit" value="Search">
+            </form>
+
+            {% for item in parsed_items %}
+              <br>
+              Title: <b>{{ item.title }}</b>
+              <br>
+              Authors: {{ item.authors }}
+              <br>
+              Journal: {{ item.journal }}
+              <br>
+              Date: {{ item.date }}
+              <br>
+              DOI: {{ item.doi }}
+              <br>
+              <form action="/check_biblio" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="validate_doi" value="{{ item.doi }}">
+                <input type="hidden" name="validate_doi_id" value="{{ id_file }}">
+                <input type="submit" value="Validate">
+              </form>
+              <br>
+              <hr>
+            {% endfor %}
+
+          </div>
       {% endif %}
       
+      <br>
+      <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
 
     </div>
     <div class="col-3 detail-right" id="main_detail">

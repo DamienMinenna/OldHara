@@ -14,11 +14,12 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 from .models import Biblio, Path_Biblio
-from .forms import addfolderForm, addDOIForm, check_biblio_doiForm
+from .forms import addfolderForm, addDOIForm, check_biblio_doiForm, check_biblio_crossRefQueryForm
 
 from .add_folder import add_folder
 from .add_entry import add_doi, add_file_from_dropzone, check_doi, validate_check_biblio
 from .read_file_for_db import read_metadata, read_firstpages
+from .queries import query_CrossRef
 
 # Create your views here.
 
@@ -67,6 +68,44 @@ def view_info(request):
     Info view.
     """
     template_name = 'info.html'
+
+    isCreated = False
+    isExist = False
+    isModaladdfolder = False
+    if request.method == 'POST':
+
+        # Add folder
+        if 'nameFolder' in request.POST:
+            form_addfolder, isCreated, isExist, isModaladdfolder = add_folder(request) # See add_folder.py
+
+        else:
+            form_addfolder = addfolderForm()
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form_addfolder = addfolderForm()
+
+    paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
+
+    countFileStore = Biblio.objects.filter(status = 1).count()
+
+    return render(request, template_name,{
+        'form_addfolder' : form_addfolder,
+        'paths': paths,
+        'folder_list': folder_list,
+        'countFileStore' : countFileStore,
+        'isCreated': isCreated,
+        'isExist': isExist,
+        'isModaladdfolder': isModaladdfolder,
+        })
+
+def view_settings(request):
+    """
+    Settings view.
+    """
+    template_name = 'settings.html'
 
     isCreated = False
     isExist = False
@@ -208,12 +247,14 @@ def view_check_biblio(request, num=-1):
     file_to_sort = Biblio.objects.filter(status = 1).order_by('-created_on')
 
     check_biblio_doi = check_biblio_doiForm()
-    text = ''
+    check_biblio_crossRefQuery = check_biblio_crossRefQueryForm()
     doi = ''
     doiTitle = ''
     doiAuthors = ''
     doiJournal = ''
     doiDate = ''
+    parsed_items = []
+
     if num == -1:
         file_selected = ''
         isDOIValid = False
@@ -228,6 +269,13 @@ def view_check_biblio(request, num=-1):
             if 'nameDOI_checkBiblio' in request.POST:
                 isNotResubmittedDOI = False
                 doi = str(request.POST['nameDOI_checkBiblio'])
+
+            if 'crossRefQuery_checkBiblio' in request.POST:
+                isNotResubmittedDOI = False
+                query = str(request.POST['crossRefQuery_checkBiblio'])
+                parsed_items = query_CrossRef(query)
+                check_biblio_crossRefQuery = check_biblio_crossRefQueryForm({"crossRefQuery_checkBiblio" : query})
+
 
         if isNotResubmittedDOI:
             # Find DOI
@@ -285,7 +333,9 @@ def view_check_biblio(request, num=-1):
         'doiJournal' : doiJournal,
         'doiDate' : doiDate,
         'check_biblio_doi' : check_biblio_doi,
+        'check_biblio_crossRefQuery' : check_biblio_crossRefQuery,
         'id_file' : num,
+        'parsed_items' : parsed_items,
         })
 
 @csrf_exempt

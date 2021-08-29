@@ -15,3 +15,10 @@ class check_biblio_doiForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nameDOI_checkBiblio'].widget.attrs['style'] = 'width:80%; height:40px;'
+
+class check_biblio_crossRefQueryForm(forms.Form):
+    crossRefQuery_checkBiblio = forms.CharField(label='Query', max_length=1000)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['crossRefQuery_checkBiblio'].widget.attrs['style'] = 'width:80%; height:40px;'
