@@ -11,7 +11,10 @@
       <br>
 
       <div class="text-center" id="loader_check_biblio">
-        Select a file and wait...
+
+        {% if not isBiblioSelected %}
+          Select a file and wait...
+        {% endif %}
       </div>
 
       <div class="zone_filePDF">
@@ -20,9 +23,43 @@
 
       <hr>
 
-      <div>
-        {{ pdf_info }}
-      </div>
+      {% if isBiblioSelected %}
+        {% if isDOIValid %}
+          <div class="alert alert-success" role="alert">
+            Reference found:
+            <br>
+            <br>
+            Title: <b>{{ doiTitle }}</b>
+            <br>
+            Authors: {{ doiAuthors }}
+            <br>
+            Journal: {{ doiJournal }}
+            <br>
+            Date: {{ doiDate }}
+
+            <form action="/check_biblio" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="validate_doi" value="{{ doi }}">
+              <input type="hidden" name="validate_doi_id" value="{{ id_file }}">
+              <input type="submit" value="Validate">
+            </form>
+        {% else %}
+          <div class="alert alert-warning" role="alert">
+          No reference found...
+        {% endif %}
+          
+            <br>
+            <br>
+
+            <form action="/check_biblio/{{ id_file }}/" method="post">
+              {% csrf_token %}
+              {{ check_biblio_doi }}
+              <input type="submit" value="Resubmit">
+            </form>
+
+          </div>
+      {% endif %}
+      
 
     </div>
     <div class="col-3 detail-right" id="main_detail">

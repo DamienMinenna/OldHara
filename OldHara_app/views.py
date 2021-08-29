@@ -14,10 +14,10 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 from .models import Biblio, Path_Biblio
-from .forms import addfolderForm, addDOIForm
+from .forms import addfolderForm, addDOIForm, check_biblio_doiForm
 
 from .add_folder import add_folder
-from .add_entry import add_doi, add_file_from_dropzone, check_doi
+from .add_entry import add_doi, add_file_from_dropzone, check_doi, validate_check_biblio
 from .read_file_for_db import read_metadata, read_firstpages
 
 # Create your views here.
@@ -53,6 +53,44 @@ def view_home(request):
 
     return render(request, template_name,{
         'refs' : refs,
+        'form_addfolder' : form_addfolder,
+        'paths': paths,
+        'folder_list': folder_list,
+        'countFileStore' : countFileStore,
+        'isCreated': isCreated,
+        'isExist': isExist,
+        'isModaladdfolder': isModaladdfolder,
+        })
+
+def view_info(request):
+    """
+    Info view.
+    """
+    template_name = 'info.html'
+
+    isCreated = False
+    isExist = False
+    isModaladdfolder = False
+    if request.method == 'POST':
+
+        # Add folder
+        if 'nameFolder' in request.POST:
+            form_addfolder, isCreated, isExist, isModaladdfolder = add_folder(request) # See add_folder.py
+
+        else:
+            form_addfolder = addfolderForm()
+
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form_addfolder = addfolderForm()
+
+    paths = Path_Biblio.objects.order_by('path')
+    folder_list = [x for x in Path_Biblio.objects.values_list('path', flat=True).distinct()]
+
+    countFileStore = Biblio.objects.filter(status = 1).count()
+
+    return render(request, template_name,{
         'form_addfolder' : form_addfolder,
         'paths': paths,
         'folder_list': folder_list,
@@ -138,6 +176,12 @@ def view_check_biblio(request, num=-1):
     isModaladdfolder = False
     if request.method == 'POST':
 
+        if 'validate_doi' in request.POST:
+            validated_doi = request.POST['validate_doi']
+            validated_id = request.POST['validate_doi_id']
+
+            validate_check_biblio(validated_doi, validated_id)
+
         # Add folder
         if 'nameFolder' in request.POST:
             form_addfolder, isCreated, isExist, isModaladdfolder = add_folder(request) # See add_folder.py
@@ -163,20 +207,64 @@ def view_check_biblio(request, num=-1):
     countFileStore = Biblio.objects.filter(status = 1).count()
     file_to_sort = Biblio.objects.filter(status = 1).order_by('-created_on')
 
-
+    check_biblio_doi = check_biblio_doiForm()
+    text = ''
+    doi = ''
+    doiTitle = ''
+    doiAuthors = ''
+    doiJournal = ''
+    doiDate = ''
     if num == -1:
         file_selected = ''
-        doi = ''
+        isDOIValid = False
+        isBiblioSelected = False
     else:
         file_selected = Biblio.objects.get(id = num)
-        doi = read_metadata(file_selected)
+        isBiblioSelected = True
+
+        # Check if resumitted DOI is received
+        isNotResubmittedDOI = True
+        if request.method == 'POST':
+            if 'nameDOI_checkBiblio' in request.POST:
+                isNotResubmittedDOI = False
+                doi = str(request.POST['nameDOI_checkBiblio'])
+
+        if isNotResubmittedDOI:
+            # Find DOI
+            doi = read_metadata(file_selected)
+
+            if doi == '':
+                doi = read_firstpages(file_selected)
+
 
         if doi == '':
-            doi = read_firstpages(file_selected)
+            isDOIValid = False
+        else:
+            check_biblio_doi = check_biblio_doiForm({"nameDOI_checkBiblio" : doi})
+            isDOIValid, text = check_doi(doi)
+            if isDOIValid:
+                d_CrossRef = json.loads(text)
+                if 'message' in d_CrossRef:
+                    if 'title' in d_CrossRef['message']:
+                        doiTitle = str(d_CrossRef['message']['title'][0])
 
+                    if 'issued' in d_CrossRef['message']:
+                        if 'date-parts' in d_CrossRef['message']['issued']:
+                            if len(d_CrossRef['message']['issued']['date-parts'][0]) >= 1:
+                                doiDate = str(d_CrossRef['message']['issued']['date-parts'][0][0])
 
-        if doi != '':
-            doi = check_doi(doi)
+                    if 'container-title' in d_CrossRef['message']: 
+                        doiJournal = str(d_CrossRef['message']['container-title'][0])
+
+                    numberauthor = 0
+                    doiAuthors = ''
+                    if 'author' in d_CrossRef['message']: 
+                        for author_i in d_CrossRef['message']['author']:
+                            doiAuthors = doiAuthors + str(author_i['given']) + ' ' + str(author_i['family']) + ', '
+                            numberauthor += 1
+                            
+                        if numberauthor > 0:
+                            doiAuthors = doiAuthors[:-2]
 
     return render(request, template_name,{
         'refs' : refs,
@@ -189,7 +277,15 @@ def view_check_biblio(request, num=-1):
         'isCreated': isCreated,
         'isExist': isExist,
         'isModaladdfolder': isModaladdfolder,
-        'pdf_info': doi,
+        'isBiblioSelected' : isBiblioSelected,
+        'isDOIValid' : isDOIValid,
+        'doi' : doi,
+        'doiTitle' : doiTitle,
+        'doiAuthors' : doiAuthors,
+        'doiJournal' : doiJournal,
+        'doiDate' : doiDate,
+        'check_biblio_doi' : check_biblio_doi,
+        'id_file' : num,
         })
 
 @csrf_exempt

@@ -17,7 +17,7 @@
       <tr id="listRef_{{ ref_i.id }}" class="table-item">
         <td id="appadd">{{ ref_i.db_text }} </td>
         <td id="appadd">
-        {% if ref_i.mainFile %}
+        {% if ref_i.file %}
         <a type="button" href="{{ 'media/'|add:ref_i.file.name }}" target="_blank">
           <i class="far fa-file-pdf"></i>
         </a>
