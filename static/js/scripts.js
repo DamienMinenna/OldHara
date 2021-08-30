@@ -66,8 +66,6 @@ $("#tableList").on('click', 'tr', function()  {
         
         $('#detail_delete').html("<button type='button' id='editDelete'><span class='fas fa-trash-alt'></span></button>");
 
-        
-
         window.__dimensions_embed.addBadges()
         _altmetric_embed_init();
 

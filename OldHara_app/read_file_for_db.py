@@ -35,8 +35,11 @@ def read_firstpages(file_selected):
     page_content = ''
     for i in range(4):
         if i+1 < number_of_pages:
-            page = pdf_toread.getPage(i)
-            page_content += page.extractText()
+            try:
+                page = pdf_toread.getPage(i)
+                page_content += page.extractText()
+            except:
+                pass
 
     doi = ''
     find_doi = page_content.lower().find("doi:")

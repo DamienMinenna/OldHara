@@ -18,9 +18,9 @@
         <td id="appadd">{{ ref_i.db_text }} </td>
         <td id="appadd">
         {% if ref_i.file %}
-        <a type="button" href="{{ 'media/'|add:ref_i.file.name }}" target="_blank">
-          <i class="far fa-file-pdf"></i>
-        </a>
+          <a type="button" href="{{ 'media/'|add:ref_i.file.name }}" target="_blank">
+            <i class="far fa-file-pdf"></i>
+          </a>
         {% endif %}
         </td>
         <td id="appadd">{{ ref_i.db.listauthor }}</td>

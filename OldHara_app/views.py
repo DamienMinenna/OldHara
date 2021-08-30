@@ -1,9 +1,4 @@
-import os
-import sys
 import json
-import PyPDF2
-from PIL import Image
-import pytesseract
 from pdf2image import convert_from_path
 
 from django.shortcuts import render, get_object_or_404
@@ -41,7 +36,6 @@ def view_home(request):
         else:
             form_addfolder = addfolderForm()
 
-
     # if a GET (or any other method) we'll create a blank form
     else:
         form_addfolder = addfolderForm()
@@ -52,7 +46,8 @@ def view_home(request):
 
     countFileStore = Biblio.objects.filter(status = 1).count()
 
-    return render(request, template_name,{
+    return render(request, template_name,
+        {
         'refs' : refs,
         'form_addfolder' : form_addfolder,
         'paths': paths,
@@ -91,7 +86,8 @@ def view_info(request):
 
     countFileStore = Biblio.objects.filter(status = 1).count()
 
-    return render(request, template_name,{
+    return render(request, template_name,
+        {
         'form_addfolder' : form_addfolder,
         'paths': paths,
         'folder_list': folder_list,
@@ -129,7 +125,8 @@ def view_settings(request):
 
     countFileStore = Biblio.objects.filter(status = 1).count()
 
-    return render(request, template_name,{
+    return render(request, template_name,
+        {
         'form_addfolder' : form_addfolder,
         'paths': paths,
         'folder_list': folder_list,
