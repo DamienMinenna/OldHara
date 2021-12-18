@@ -57,7 +57,12 @@ Now, you can open *OldHara* using any web browser at the address: http://127.0.0
 
 ## Usage
 
-For the first use, you must create at least one folder. Folders are created in the OldHara/media/ directory. Every references, even without an associated file (pdf, jpg, ..) must be given a unique folder. 
+### Folders
+
+* For your first use, you **must create at least one folder**. Folders are created in the *../OldHara/media/* directory. Every references, even without an associated file (pdf, jpg, ..) must be given a unique folder. 
+
+* Sub directories can be created as *dir/subdir* if *dir* exist.
+
 
 ### Add entry
 
@@ -66,6 +71,3 @@ To add a reference, click on "Add entry".
 * The dropzone allows to create multiple references with their files. After using the dropzone, entries are put in the "Files to sort" section.
 * A reference can be added using its DOI directly.
 
-### Sorting files
-
-...
