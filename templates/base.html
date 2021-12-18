@@ -1,0 +1,148 @@
+{% load static%}<!DOCTYPE html>
+<html>
+  <head>
+    <title>Old Hara</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap" rel="stylesheet">
+    <meta name="google" content="notranslate" />
+
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+    <!-- Aacademicons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous" />
+
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/dropzone.css' %}" rel="stylesheet" />
+
+  </head>
+
+  <body> 
+
+    <!-- JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous">
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous">
+    </script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous">
+    </script>
+    <script async src='https://badge.dimensions.ai/badge.js' charset='utf-8'></script>
+    <script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
+
+    <!-- Dropzone -->
+    <script src="{% static 'js/dropzone.js' %}"></script>
+
+    <!-- Navigation -->
+    <div class="container-fluid container-header">
+      <div class="row row-header-top">
+
+        <div class="col">
+
+          <a class="navbar-brand text-white" href="/">
+            <span class="titlefont"> 
+            <img src="{% static '/img/logo.png' %}" alt="" width="15">Old Hara </span>
+          </a>
+          <span class="subtitlefont"> The open-source reference management software </span>
+
+        </div>
+      </div>
+      <div class="row row-header-bottom">
+        <div class="col">
+
+          <div class="btn-group">
+            <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-create-entry-dropzone"> 
+              <span class="fas fa-file-upload"></span> &nbsp; Add entry
+            </button>
+            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" data-toggle="modal" data-target="#id-modal-create-entry-dropzone">Add files</a>
+              <a class="dropdown-item" data-toggle="modal" data-target="#id-modal-create-doi">Add doi</a>
+              <a class="dropdown-item disabled" href="/">Manual new entry</a>
+            </div>
+          </div>
+
+          <button type="button" class="btn text-center disabled">
+            <i class="fab fa-searchengin"></i>&nbsp; Search
+          </button>
+
+          <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-create-folder">
+            <span class="fas fa-folder-plus"></span> &nbsp; Add folder
+          </button>
+
+          <button type="button" class="btn text-center disabled">
+            <span class="fas fa-folder-minus"></span> &nbsp; Remove folder
+          </button>
+        
+          <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-info">
+            <i class="fas fa-question-circle"></i> &nbsp; Informations 
+          </button>
+
+          <button type="button" class="btn text-center disabled">
+            <i class="fas fa-cog"></i> &nbsp; Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {% include "modal-create-folder.html" %}
+    {% include "modal-create-entry-dropzone.html" %}
+    {% include "modal-create-doi.html" %}
+    {% include "modal-info.html" %}
+
+    {% block content %}
+    <!-- Content Goes here -->
+    {% endblock content %}
+
+    <!-- Variables from python. Cannot be in scripts.js -->
+    <script type='text/javascript'>
+      // Chech if create folder modal must be visible
+      var modalfoldervisible = {{ form_create_folder_isModal|yesno:'true,false' }} ;
+      if (modalfoldervisible) {
+          $('#id-modal-create-folder').modal('show');
+      }
+
+      // Chech if create doi modal must be visible
+      var modaldoivisible = {{ form_create_doi_isModal|yesno:'true,false' }} ;
+      if (modaldoivisible) {
+          $('#id-modal-create-doi').modal('show');
+      }
+
+      // Get url django to update refs with ajax requests
+      var url_update_ref = "{% url 'update_ref' %}";
+
+      // Get list of folder for update_folder
+      var folder_list = {{ folder_list|safe }};
+
+      // Django token for list of folder for update_folder
+      var csrf_token_folder = '{% csrf_token %}';
+
+      // Get list of type for update_type
+      var type_ref = {{ type_ref|safe }};
+
+    </script>
+    <!-- Core theme JS-->
+    <script  src="{% static 'js/scripts.js' %}"></script>
+
+  </body>
+</html>

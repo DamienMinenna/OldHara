@@ -1,0 +1,87 @@
+<div id="id-data-selected-ref" style="display: none;">
+  {{ selected_ref.data_text }}
+</div>
+
+<ul class="list-group" id="details">
+
+  <li class='list-group-item detail-li'> <span class="detail-names"> <i class="fas fa-folder"></i> &nbsp; Folder:</span> 
+    <span id="detail_folder">
+      <div id='id-update-selected-folder' class='detail-editable'> {{ selected_ref.data.folder }}</div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Type:</span> 
+    <span id="detail_type">
+      <div id='id-update-selected-type' class='detail-editable'> {{ selected_ref.data.type }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Title:</span> 
+    <b> <span id="detail_title">
+      <div contenteditable='true' id='id-update-selected-title' class='detail-editable'> {{ selected_ref.data.title }} </div>
+    </span> </b>
+  </li>
+  <li class='list-group-item detail-li'> <span class="detail-names">Authors:</span> 
+    <span id="detail_authors">
+      <div contenteditable='true' id='id-update-selected-authors' class='detail-editable'> {{ selected_ref.data.listauthor }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Journal:</span> 
+    <span id="detail_journal">
+      <div contenteditable='true' id='id-update-selected-journal' class='detail-editable'> {{ selected_ref.data.journal }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Date:</span> 
+    <span id="detail_dateD">
+      <div contenteditable='true' id='id-update-selected-dateD' class='detail-editable'> {{ selected_ref.data.dateD }} </div>
+    </span> 
+    <span id="detail_dateM">
+      <div id='id-update-selected-dateM' class='detail-editable'> {{ selected_ref.data.dateMword }} </div>
+    </span>  
+    <span id="detail_dateY">
+      <div contenteditable='true' id='id-update-selected-dateY' class='detail-editable'> {{ selected_ref.data.dateY }}</div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Volume:</span> 
+    <span id="detail_volume">
+      <div contenteditable='true' id='id-update-selected-volume' class='detail-editable'> {{ selected_ref.data.volume }}</div>
+    </span> 
+  </li>
+    
+  <li class='list-group-item detail-li'> <span class="detail-names">Issue:</span> 
+    <span id="detail_issue">
+      <div contenteditable='true' id='id-update-selected-issue' class='detail-editable'> {{ selected_ref.data.issue }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Pages:</span> 
+    <span id="detail_page">
+      <div contenteditable='true' id='id-update-selected-page' class='detail-editable'> {{ selected_ref.data.page }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">Article number:</span> 
+    <span id="detail_artnumber">
+      <div contenteditable='true' id='id-update-selected-articlenumber' class='detail-editable'> {{ selected_ref.data.articlenumber }} </div>
+    </span> 
+  </li> 
+  <li class='list-group-item detail-li'> <span class="detail-names">DOI:</span> 
+    <span id="detail_doi">
+      <a target='_blank' href='https://doi.org/" + {{ selected_ref.data.DOI }} + "'> {{ selected_ref.data.DOI }} </a>
+    </span>
+  </li> 
+  <li class='list-group-item detail-li'>  
+    <span id="detail_badgedimension">
+      <span class='__dimensions_badge_embed__' data-doi="{{ selected_ref.data.DOI }}" data-style='small_rectangle'></span>
+      <div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi="{{ selected_ref.data.DOI }}" class='altmetric-embed'></div>
+    </span> 
+  </li>   
+  <li class='list-group-item detail-li'>  <span class="detail-names"></span> 
+    <span id="detail_delete">
+      <button type='button' id='id-delete-selected-ref'><span class='fas fa-trash-alt'></span></button>
+    </span> 
+  </li>   
+
+</ul>
+
+<!-- Display badges -->
+<script>
+  window.__dimensions_embed.addBadges()
+  _altmetric_embed_init();
+</script>

@@ -1,0 +1,67 @@
+
+<div>
+  <input type="text" class="form-control" placeholder="Search in app" aria-label="Search in app" aria-describedby="btnGroupAddon">
+</div>
+
+
+<h6 class="menu-accordion d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+  <form action="/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="filter_folder" value="no folder selected" />
+    <a class="title-sidebar" id="menu-folder-name" onclick="this.parentNode.submit()">
+      <i class="fas fa-folder"></i> &nbsp; Folders
+    </a>
+  </form>
+  <button type="button" class="btn btn-menu-sidebar btn-sm text-center" data-toggle="modal" data-target="#id-modal-create-folder">
+    <span class="fas fa-folder-plus"></span>
+  </button>
+</h6>
+
+<div class="menu-panel" style="display: block;" id="menu-folder-list">
+  <ul class="nav flex-column mb-2">
+  {% for folder in folders %}
+  <li class="nav-item">
+    <form action="/" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="filter_folder" value="{{ folder.id }}" />
+      <a class="text-sidebar" onclick="this.parentNode.submit()">
+        {{ folder.path }}
+      </a>
+    </form>
+  </li>
+  {% endfor %}
+  </ul>
+</div>
+
+
+<h6 class="menu-accordion d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+  <span class="title-sidebar" id="menu-label-name">
+    <i class="fas fa-tags"></i> &nbsp; Labels (not active)
+  </span>
+</h6>
+
+<div class="menu-panel" style="display: block;" id="menu-label-list">
+  <ul class="nav flex-column mb-2">
+  <li class="nav-item">
+    <a class="text-sidebar" href="#">
+      Name label
+    </a>
+  </li>
+  </ul>
+</div>
+
+<br>
+<div style="position: absolute; bottom: 10px; left: 20px;">
+  Old Hara v0.7.0 <a class="btn btn-sidebar-bottom mx-2" href="https://github.com/DamienMinenna/OldHara" target="_blank"><i class="fab fa-github"></i></a>  
+
+  <p class="m-0 text-white text-center ">  
+    Copyright &copy; Damien Minenna
+    <!-- This script automatically adds the current year to your website footer-->
+    <!-- (credit: https://updateyourfooter.com/)-->
+    <script>
+        document.write(new Date().getFullYear());
+    </script>
+  </p>
+</div>
+
+

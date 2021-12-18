@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row" id="main_Row">
+    <div class="col-2 col-menu-sidebar" id="main_sidebar">
+      {% include "left-menu.html" %}
+    </div>
+    <div class="col-7 col-main-container" id="main_container">
+      {% include "list-refs.html" %}
+    </div>
+    <div class="col-3 detail-right" id="main_detail">
+        {% include "right-details-empty.html" %}
+    </div>
+  </div>
+</div>
+
+{%endblock%}
+

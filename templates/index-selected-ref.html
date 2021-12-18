@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row" id="main_Row">
+    <div class="col-9 col-menu-sidebar" id="main_container">
+
+      <div class="progress" id="id-progress-pdf">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+      </div>
+
+      <br>
+      
+      {% if not isEntryExist%}
+        <div class="alert alert-danger" role="alert">
+          Entry does not exist!
+        </div>
+      {% else %}
+        {% if not selected_ref.file %}
+          <div class="alert alert-warning" role="alert">
+            No file for his entry.
+          </div>
+        {% else %}
+          <div class="zone_filePDF">
+            <embed src="{{ selected_ref.file.url }}" width="100%" height="350px" />
+          </div>
+
+          {% if form_update_doi_isUpdated %}
+            <div class="alert alert-success" role="alert">
+              The doi is updated with the ref metadata. 
+            </div>
+          {% endif %}
+          {% if form_update_doi_isnotValid %}
+            <div class="alert alert-warning" role="alert">
+              Doi not valid!
+            </div>
+          {% endif %}
+
+          {% if scanfile_status == 1 %}
+            <div class="alert alert-success" role="alert">
+              <p>Following doi found in the file: {{ scanfile_doi }}</p>
+
+              <p>Press <b>Submit</b> to validate it.</p> 
+            </div>
+          {% endif %}
+          {% if scanfile_status == 2 %}
+            <div class="alert alert-warning" role="alert">
+              No doi found in the file. Try the manual search.
+            </div>
+          {% endif %}
+
+          <form action="/ref/{{ selected_ref.id }}/" method="POST">
+            {% csrf_token %}
+            {{ form_update_doi_form }}
+            <input type="submit" value="Submit">
+          </form>
+
+          <br>
+
+          <form action="/ref/{{ selected_ref.id }}/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="scan-file" value="{{ selected_ref.id }}" />
+            <input type="submit" value="Scan document">
+          </form>
+
+          <br>
+
+          <form action="/ref/{{ selected_ref.id }}/" method="POST">
+            {% csrf_token %}
+            {{ form_manual_search_form }}
+            <input type="submit" value="Go">
+          </form>
+
+          {% for item in manual_search_parsed_items %}
+              <br>
+              Title: <b>{{ item.title }}</b>
+              <br>
+              Authors: {{ item.authors }}
+              <br>
+              Journal: {{ item.journal }}
+              <br>
+              Date: {{ item.date }}
+              <br>
+              DOI: {{ item.doi }}
+              <br>
+              <form action="/ref/{{ selected_ref.id }}/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="doi" value="{{ item.doi }}">
+                <input type="submit" value="Validate">
+              </form>
+              <br>
+              <hr>
+            {% endfor %}
+
+          <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
+
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="col-3 detail-right" id="main_detail">
+        {% include "right-details-selected-ref.html" %}
+    </div>
+  </div>
+</div>
+
+{%endblock%}

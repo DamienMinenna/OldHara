@@ -1,0 +1,51 @@
+<div class="modal fade" id="id-modal-create-doi" tabindex="-1" role="dialog" aria-labelledby="modalcreateDOI" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalcreateDOI">Add a new entry from its doi</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          {% if form_create_doi_isCreated %}
+            <div class="alert alert-success" role="alert">
+              The entry is created!
+              <br>
+              <br>
+              Title: <b>{{ refs.0.data.title }}</b>
+              <br>
+              Authors: {{ refs.0.data.listauthor }}
+              <br>
+              Journal: {{ refs.0.data.journal }}
+              <br>
+              Date: {{ refs.0.data.dateD }} {{ refs.0.data.dateMword }} {{ refs.0.data.dateY }}
+            </div>
+          {% endif %}
+          {% if form_create_doi_isExist %}
+            <div class="alert alert-warning" role="alert">
+              A reference with this DOI already exists!
+            </div>
+          {% endif %}
+          {% if form_create_doi_isnotValid %}
+            <div class="alert alert-danger" role="alert">
+              Cannot retrive a database for this DOI! Check the DOI validity.
+            </div>
+          {% endif %}
+
+          <form action="/" method="post">
+            {% csrf_token %}
+            {{ form_create_doi_form.as_p }}
+            <input type="submit" value="Submit">
+          </form>
+
+          <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>

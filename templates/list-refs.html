@@ -1,0 +1,38 @@
+
+<div class="table-responsive">
+  <table width="400px" style="table-layout:fixed;" class="table table-bordered table-hover table-striped" id="idtableref">
+    <thead class="table-header">
+      <tr>
+        <th width="0px"></th>
+        <th width="70px">File</th>
+        <th width="250px">Authors</th>
+        <th width="450px">Title</th>
+        <th width="90px">Date</th>
+        <th width="300px">Journal</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for ref in refs %}
+      <tr id="listRef_{{ ref.id }}" class="table-item">
+        <td id="appadd">{{ ref.data_text }}</td>
+        <td id="appadd">
+        {% if ref.file %}
+          <a type="button" href="{{ 'media/'|add:ref.file.name }}" target="_blank">
+            <i class="far fa-file-pdf"></i>
+          </a>
+        {% endif %}
+        <a type="button" href="ref/{{ ref.id }}">
+          <i class="fas fa-money-bill-wave"></i>
+        </a>
+        </td>
+        <td id="appadd">{{ ref.data.listauthor }}</td>
+        <td id="appadd">{{ ref.data.title }}</td>
+        <td id="appadd">{{ ref.data.dateY }}</td>
+        <td id="appadd">{{ ref.data.journal }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br>
