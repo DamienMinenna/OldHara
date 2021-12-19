@@ -89,16 +89,23 @@
           <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-create-folder">
             <span class="fas fa-folder-plus"></span> &nbsp; Add folder
           </button>
-
-          <button type="button" class="btn text-center disabled">
-            <span class="fas fa-folder-minus"></span> &nbsp; Remove folder
-          </button>
+          {% if filter_selected_folder == -1 %}
+            <button type="button" class="btn text-center disabled">
+              <span class="fas fa-folder-minus"></span> &nbsp; Remove folder
+            </button>
+          {% else %}
+            
+            {% include "modal-delete-folder.html" %}
+            <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-delete-folder">
+              <span class="fas fa-folder-minus"></span> &nbsp; Remove folder
+            </button>
+          {% endif %}
         
           <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-info">
             <i class="fas fa-question-circle"></i> &nbsp; Informations 
           </button>
 
-          <button type="button" class="btn text-center disabled">
+          <button type="button" class="btn text-center" data-toggle="modal" data-target="#id-modal-settings">
             <i class="fas fa-cog"></i> &nbsp; Settings
           </button>
         </div>
@@ -109,6 +116,7 @@
     {% include "modal-create-entry-dropzone.html" %}
     {% include "modal-create-doi.html" %}
     {% include "modal-info.html" %}
+    {% include "modal-settings.html" %}
 
     {% block content %}
     <!-- Content Goes here -->
@@ -139,6 +147,9 @@
 
       // Get list of type for update_type
       var type_ref = {{ type_ref|safe }};
+
+      // Get list of month for update_date
+      var month_word = {{ month_word|safe }};
 
     </script>
     <!-- Core theme JS-->

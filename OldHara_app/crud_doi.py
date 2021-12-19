@@ -21,6 +21,8 @@ def create_entry_from_crossref_doi(crossrefrequest, folder, nameDOI):
     temp["id"] = ref.id
     temp["folder"] = ref.folder.path
 
+    temp["status"] = 0
+
     if 'message' in data_crossref:
         temp["title"] = ''
         if 'title' in data_crossref['message']:
@@ -41,7 +43,7 @@ def create_entry_from_crossref_doi(crossrefrequest, folder, nameDOI):
                     if data_crossref['message']['issued']['date-parts'][0][1] == 1:
                         temp["dateMword"] = 'January'
                     elif data_crossref['message']['issued']['date-parts'][0][1] == 2:
-                        temp["dateMword"] = 'Febuary'
+                        temp["dateMword"] = 'February'
                     elif data_crossref['message']['issued']['date-parts'][0][1] == 3:
                         temp["dateMword"] = 'March'
                     elif data_crossref['message']['issued']['date-parts'][0][1] == 4:
@@ -173,6 +175,8 @@ def update_entry_from_crossref_doi(crossrefrequest, doi, selected_ref):
     temp = {}
     temp["id"] = selected_ref.id
     temp["folder"] = selected_ref.folder.path
+
+    temp["status"] = 0
 
     if 'message' in data_crossref:
         temp["title"] = ''

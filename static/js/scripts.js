@@ -2,6 +2,7 @@
 function edit_table(data) {
     let html
     html = "<td id='appadd'>" + JSON.stringify(data) + "</td>"
+    + "<td id='appadd'><a type='button' href='ref/"+ data['id'] + "'><i class='fas fa-share-square'></i></a></td>"
     + "<td id='appadd'></td>"
     + "<td id='appadd'>" + data['listauthor'] + "</td>"
     + "<td id='appadd'>" + data['title'] + "</td>"
@@ -30,6 +31,21 @@ $("#idtableref").on('click', 'tr', function()  {
     $("#listRef_"+data.id).addClass("table-selected");
 
     // MODIFY the right column to include details
+    $('#detail_info').html("<a type='button' href='ref/" + data['id'] + "'><i class='fas fa-share-square'></i>");
+
+    if (data['status'] == 1) {
+
+        html_scanit = "<form action='/ref/" + data['id'] + "/' method='POST'>"
+        + csrf_token_folder
+        + "<input type='hidden' name='scan-file' value='" + data['id'] + "' /><input type='submit' value='Scan document'></form>";
+
+        // $('#detail_scan').html("<span class='detail-names'>Document can be scanned: </span> <a type='button' href='ref/" + data['id'] + "'>Scan it!</i>");
+        $('#detail_scan').html("<span class='detail-names'>Document can be scanned: </span>" + html_scanit);
+
+    } else {
+        $('#detail_scan').html("");
+    }
+
     $('#detail_folder').html("<div id='id-update-folder' class='detail-editable'>" + data['folder'] + "</div>");
     $('#detail_type').html("<div id='id-update-type' class='detail-editable'>" + data['type'] + "</div>");
     $('#detail_title').html("<div contenteditable='true' id='id-update-title' class='detail-editable'>" + data['title'] + "</div>");
@@ -189,6 +205,88 @@ $("#idtableref").on('click', 'tr', function()  {
             data: {
                 'id': data['id'],
                 'articlenumber': newarticlenumber,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                let html_table;
+                html_table = edit_table(responseData);
+                $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update dateD
+    document.getElementById("id-update-dateD").addEventListener("input", function() {
+        var newdate = $('#id-update-dateD').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'dateD': newdate,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                let html_table;
+                html_table = edit_table(responseData);
+                $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update dateM
+    $( "#id-update-dateM" ).one( "click", function() {
+        let html_dateMlist;
+
+        html_dateMlist = "<form action='' method='POST' id='id-selection-dateM_form'>"
+            + csrf_token_folder
+            + "<select id='id-update-dateM_from_form' name='dateMword' onchange='this.form.submit()'>"
+            + "<option value='" + data['dateMword'] + "'>" + data['dateMword'] + "</option>";
+        
+        for(i = 0; i < month_word.length; i++){
+            if(!(month_word[i] == data['dateMword'])){
+                html_dateMlist += "<option value='" + month_word[i] + "'>" + month_word[i] + "</option>"
+            }
+        };
+
+        html_dateMlist += "</select></form>"
+        $("#id-update-dateM").html(html_dateMlist);
+
+        $(document).ready(function(e) {
+            $("[name='dateMword']").on('change', function() {
+                $.ajax({
+                    synch: 'true',
+                    type: "POST",
+                    url: url_update_ref,
+                    data: {
+                        'id': data['id'],
+                        'dateMword': $("#id-update-dateM_from_form").val()
+                    },
+                    dataType: 'json',
+                    success: function(responseData) {
+                        let html_table;
+                        html_table = edit_table(responseData);
+                        $("#listRef_"+data['id']).html(html_table);
+                    }
+                });
+                return false;
+            });
+        }, false);
+    });
+
+    // Update dateY
+    document.getElementById("id-update-dateY").addEventListener("input", function() {
+        var newdate = $('#id-update-dateY').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'dateY': newdate,
             },
             dataType: 'json',
             success: function (responseData) {
@@ -457,6 +555,88 @@ document.getElementById("id-update-selected-articlenumber").addEventListener("in
             // let html_table;
             // html_table = edit_table(responseData);
             // $("#listRef_"+data['id']).html(html_table);
+        }
+    });
+
+}, false);
+
+// Update dateD (Selected ref)
+document.getElementById("id-update-selected-dateD").addEventListener("input", function() {
+    var newdate = $('#id-update-selected-dateD').html();
+    $.ajax({
+        synch: 'true',
+        url: url_update_ref,
+        type: 'POST',
+        data: {
+            'id': data['id'],
+            'dateD': newdate,
+        },
+        dataType: 'json',
+        success: function (responseData) {
+            let html_table;
+            html_table = edit_table(responseData);
+            $("#listRef_"+data['id']).html(html_table);
+        }
+    });
+
+}, false);
+
+// Update dateM (Selected ref)
+$( "#id-update-selected-dateM" ).one( "click", function() {
+    let html_dateMlist;
+
+    html_dateMlist = "<form action='' method='POST' id='id-selection-dateM_form'>"
+        + csrf_token_folder
+        + "<select id='id-update-dateM_from_form' name='dateMword' onchange='this.form.submit()'>"
+        + "<option value='" + data['dateMword'] + "'>" + data['dateMword'] + "</option>";
+    
+    for(i = 0; i < month_word.length; i++){
+        if(!(month_word[i] == data['dateMword'])){
+            html_dateMlist += "<option value='" + month_word[i] + "'>" + month_word[i] + "</option>"
+        }
+    };
+
+    html_dateMlist += "</select></form>"
+    $("#id-update-selected-dateM").html(html_dateMlist);
+
+    $(document).ready(function(e) {
+        $("[name='dateMword']").on('change', function() {
+            $.ajax({
+                synch: 'true',
+                type: "POST",
+                url: url_update_ref,
+                data: {
+                    'id': data['id'],
+                    'dateMword': $("#id-update-dateM_from_form").val()
+                },
+                dataType: 'json',
+                success: function(responseData) {
+                    let html_table;
+                    html_table = edit_table(responseData);
+                    $("#listRef_"+data['id']).html(html_table);
+                }
+            });
+            return false;
+        });
+    }, false);
+});
+
+// Update dateY (Selected ref)
+document.getElementById("id-update-selected-dateY").addEventListener("input", function() {
+    var newdate = $('#id-update-selected-dateY').html();
+    $.ajax({
+        synch: 'true',
+        url: url_update_ref,
+        type: 'POST',
+        data: {
+            'id': data['id'],
+            'dateY': newdate,
+        },
+        dataType: 'json',
+        success: function (responseData) {
+            let html_table;
+            html_table = edit_table(responseData);
+            $("#listRef_"+data['id']).html(html_table);
         }
     });
 

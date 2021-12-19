@@ -1,6 +1,8 @@
 import os
 
-from .models import Folder_Refs
+from django.conf import settings
+
+from .models import Ref, Folder_Refs
 from .forms import form_create_folder
 
 def create_folder(request):
@@ -29,3 +31,19 @@ def create_folder(request):
             form_create_folder_isExist = True
 
     return form_create_folder_form, form_create_folder_isCreated, form_create_folder_isExist 
+
+def delete_folder(request):
+    remove_folder = request.POST['remove-folder']
+
+    refs = Ref.objects.filter(folder = remove_folder)
+    folder = Folder_Refs.objects.get(id = remove_folder)
+    folder_name = settings.MEDIA_ROOT + Folder_Refs.objects.get(id = remove_folder).path
+
+    for ref in refs:
+        path = ref.file.path
+        os.remove(path)
+
+    os.rmdir(folder_name)
+
+    refs.delete()
+    folder.delete()

@@ -36,6 +36,8 @@ def create_entry_from_dropzone(request):
     temp["folder"] = ref.folder.path
     temp["title"] = uploaded_file.name
 
+    temp["status"] = 1
+
     # Other data (empty)
     temp["dateY"] = ''
     temp["dateM"] = ''

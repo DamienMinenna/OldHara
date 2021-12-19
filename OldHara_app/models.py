@@ -2,6 +2,19 @@ from django.db import models
 """
 Contains OldHara models
 """
+MONTH_WORD = ['',
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December']
 
 TYPE_REF = ["book-section",
             "monograph",
@@ -65,7 +78,7 @@ class Ref(models.Model):
 
     data_text = models.TextField(blank = True) # Text version of the data for JS.
 
-    file = models.FileField(upload_to='toSort/',blank=True) # File
+    file = models.FileField(upload_to='unsorted/',blank=True) # File
 
     folder = models.ForeignKey(Folder_Refs, on_delete=models.CASCADE) # File location
 

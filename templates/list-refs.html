@@ -4,8 +4,9 @@
     <thead class="table-header">
       <tr>
         <th width="0px"></th>
-        <th width="70px">File</th>
-        <th width="250px">Authors</th>
+        <th width="40px"></th>
+        <th width="35px"></th>
+        <th width="200px">Authors</th>
         <th width="450px">Title</th>
         <th width="90px">Date</th>
         <th width="300px">Journal</th>
@@ -16,14 +17,16 @@
       <tr id="listRef_{{ ref.id }}" class="table-item">
         <td id="appadd">{{ ref.data_text }}</td>
         <td id="appadd">
-        {% if ref.file %}
-          <a type="button" href="{{ 'media/'|add:ref.file.name }}" target="_blank">
-            <i class="far fa-file-pdf"></i>
+          <a type="button" href="ref/{{ ref.id }}">
+            <i class="fas fa-share-square"></i>
           </a>
-        {% endif %}
-        <a type="button" href="ref/{{ ref.id }}">
-          <i class="fas fa-flag"></i>
-        </a>
+        </td>
+        <td id="appadd">
+          {% if ref.file %}
+            <a type="button" href="{{ 'media/'|add:ref.file.name }}" target="_blank">
+              <i class="far fa-file-pdf"></i>
+            </a>
+          {% endif %}
         </td>
         <td id="appadd">{{ ref.data.listauthor }}</td>
         <td id="appadd">{{ ref.data.title }}</td>

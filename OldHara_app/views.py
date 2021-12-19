@@ -8,9 +8,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import JsonResponse
 
-from .models import Ref, Folder_Refs, TYPE_REF
+from .models import Ref, Folder_Refs, TYPE_REF, MONTH_WORD
 from .forms import form_create_folder, form_create_doi, form_update_doi, form_manual_search
-from .crud_folder import create_folder
+from .crud_folder import create_folder, delete_folder
 from .crud_doi import create_doi, update_doi
 from .crud_entryfile import create_entry_from_dropzone
 from .scan_file import read_metadata, read_firstpages
@@ -42,6 +42,10 @@ def view_home(request):
     # Initiate folders
     folders = Folder_Refs.objects.order_by('path')
 
+    # Filter by folders
+    filter_selected_folder = -1
+    filter_selected_folder_name = "no folder selected"
+
     # Check post
     if request.method == 'POST':
 
@@ -69,13 +73,23 @@ def view_home(request):
 
         # Filter: selection by folder
         if 'filter_folder' in request.POST:
-            if request.POST['filter_folder'] == "no folder selected":
+            filter_selected_folder = request.POST['filter_folder']
+            if filter_selected_folder == -1:
                 refs = Ref.objects.order_by('-created_on')
             else:
                 # Only Ref objects filtered
-                refs = Ref.objects.filter(folder=request.POST['filter_folder']).order_by('-created_on')
+                refs = Ref.objects.filter(folder = filter_selected_folder).order_by('-created_on')
+                filter_selected_folder_name = Folder_Refs.objects.get(id = filter_selected_folder).path
         else:
             # All Ref objects
+            refs = Ref.objects.order_by('-created_on')
+
+        # Delete folder
+        if 'remove-folder' in request.POST:
+            delete_folder(request)
+
+            # Reload models
+            folders = Folder_Refs.objects.order_by('path')
             refs = Ref.objects.order_by('-created_on')
 
     else:
@@ -89,7 +103,11 @@ def view_home(request):
     {
     'refs' : refs, # List of Ref objects
     'folders': folders, # List of Folder_Refs objects
+    'filter_selected_folder': filter_selected_folder, # Filter selected folder id
+    'filter_selected_folder_name': filter_selected_folder_name, # Filter selected folder name
     'folder_list': folder_list, # List of folder for update_folder
+    'type_ref': TYPE_REF, # List of type of ref
+    'month_word': MONTH_WORD, # List of month for date update
     'form_create_folder_form' : form_create_folder_form, # Form for creating a folder: Django form
     'form_create_folder_isCreated': form_create_folder_isCreated, # Form for creating a folder: Boolean if folder is created
     'form_create_folder_isExist': form_create_folder_isExist, # Form for creating a folder: Boolean if folder already exists
@@ -99,9 +117,7 @@ def view_home(request):
     'form_create_doi_isExist': form_create_doi_isExist, # Form for creating an entry from doi: Boolean if doi already exists in database
     'form_create_doi_isnotValid': form_create_doi_isnotValid, # Form for creating an entry from doi: Boolean if doi is not valid
     'form_create_doi_isModal': form_create_doi_isModal, # Form for creating an entry from doi: Boolean if display modal
-    'type_ref': TYPE_REF, # List of type of ref
     })
-
 
 def view_ref(request, num=-1):
     """
@@ -111,6 +127,9 @@ def view_ref(request, num=-1):
 
     # Initiate folders
     folders = Folder_Refs.objects.order_by('path')
+
+    # Filter by folders (not used here)
+    filter_selected_folder = -1
 
     # Check number selected
     if num == -1:
@@ -160,18 +179,18 @@ def view_ref(request, num=-1):
                 search = str(request.POST['search'])
                 manual_search_parsed_items = query_CrossRef(search)
 
-            if 'search-validate-doi' in request.POST: 
-                pass
-
     folder_list = [x for x in Folder_Refs.objects.values_list('path', flat=True).distinct()]
 
     return render(request, template_name,
     {
         'selected_ref': selected_ref, # Selected ref
         'folders': folders, # List of Folder_Refs objects
+        'filter_selected_folder': -1, # Filter selected folder id (not used here, but needed to display remove folder button)
+        'filter_selected_folder_name': "no folder selected", # Filter selected folder name (not used here, but needed to display remove folder button)
         'isEntryExist': isEntryExist, # Is entry exist or not
         'folder_list': folder_list, # List of folder for update_folder
         'type_ref': TYPE_REF, # List of type of ref
+        'month_word': MONTH_WORD, # List of month for date update
         'form_update_doi_form': form_update_doi_form, # Form for updating the doi of a ref
         'form_update_doi_isUpdated': form_update_doi_isUpdated, # Form for updating the doi of a ref: Boolean if entry is updated
         'form_update_doi_isnotValid': form_update_doi_isnotValid, # Form for updating the doi of a ref: is doi not valid
@@ -242,6 +261,30 @@ def update_ref(request):
 
     elif 'articlenumber' in request.POST:
         ref.data["articlenumber"] = request.POST['articlenumber'].rstrip("\n")
+        ref.data_text = json.dumps(ref.data)
+        ref.save()
+
+        responseData = ref.data
+        return JsonResponse(responseData)
+
+    elif 'dateD' in request.POST:
+        ref.data["dateD"] = request.POST['dateD'].rstrip("\n")
+        ref.data_text = json.dumps(ref.data)
+        ref.save()
+
+        responseData = ref.data
+        return JsonResponse(responseData)
+
+    elif 'dateMword' in request.POST:
+        ref.data["dateMword"] = request.POST['dateMword']
+        ref.data_text = json.dumps(ref.data)
+        ref.save()
+
+        responseData = ref.data
+        return JsonResponse(responseData)
+    
+    elif 'dateY' in request.POST:
+        ref.data["dateY"] = request.POST['dateY'].rstrip("\n")
         ref.data_text = json.dumps(ref.data)
         ref.save()
 
