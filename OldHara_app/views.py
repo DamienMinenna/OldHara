@@ -155,6 +155,7 @@ def view_ref(request, num=-1):
     # Initiate manual search
     form_manual_search_form = form_manual_search()
     manual_search_parsed_items = []
+    manual_search_isNotValid = False
 
     if isEntryExist == True:
 
@@ -177,7 +178,7 @@ def view_ref(request, num=-1):
 
             if 'search' in request.POST: 
                 search = str(request.POST['search'])
-                manual_search_parsed_items = query_CrossRef(search)
+                manual_search_parsed_items, manual_search_isNotValid = query_CrossRef(search)
 
     folder_list = [x for x in Folder_Refs.objects.values_list('path', flat=True).distinct()]
 
@@ -197,7 +198,8 @@ def view_ref(request, num=-1):
         'scanfile_status': scanfile_status, # Status of the scan file
         'scanfile_doi': scanfile_doi, # doi of the scan file
         'form_manual_search_form': form_manual_search_form, # Form for a manual search of a ref
-        'manual_search_parsed_items': manual_search_parsed_items # List of item obtained from the manual search query
+        'manual_search_parsed_items': manual_search_parsed_items, # List of item obtained from the manual search query
+        'manual_search_isNotValid': manual_search_isNotValid # Check if the manual search query return a valid answer
     })
 
 

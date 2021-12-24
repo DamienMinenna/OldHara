@@ -37,7 +37,7 @@ $("#idtableref").on('click', 'tr', function()  {
 
         html_scanit = "<form action='/ref/" + data['id'] + "/' method='POST'>"
         + csrf_token_folder
-        + "<input type='hidden' name='scan-file' value='" + data['id'] + "' /><input type='submit' value='Scan document'></form>";
+        + "<input type='hidden' name='scan-file' value='" + data['id'] + "' /><button class='btn btn-success btn-sm' type='submit'>Scan document</button> </form>";
 
         // $('#detail_scan').html("<span class='detail-names'>Document can be scanned: </span> <a type='button' href='ref/" + data['id'] + "'>Scan it!</i>");
         $('#detail_scan').html("<span class='detail-names'>Document can be scanned: </span>" + html_scanit);
@@ -62,7 +62,7 @@ $("#idtableref").on('click', 'tr', function()  {
     $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['DOI'] + "'>" + data['DOI'] + "</a>");
     $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['DOI'] + " class='altmetric-embed'></div>");
     
-    $('#detail_delete').html("<button type='button' id='id-delete-ref'><span class='fas fa-trash-alt'></span></button>");
+    $('#detail_delete').html("<button type='button' class='btn btn-danger btn-sm mb-2' id='id-delete-ref'><span class='fas fa-trash-alt'></span></button>");
 
     window.__dimensions_embed.addBadges()
     _altmetric_embed_init();

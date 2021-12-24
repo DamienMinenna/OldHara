@@ -50,18 +50,19 @@
             </div>
           {% endif %}
 
-          <form action="/ref/{{ selected_ref.id }}/" method="POST">
-            {% csrf_token %}
-            {{ form_update_doi_form }}
-            <input type="submit" value="Submit">
-          </form>
-
-          <br>
 
           <form action="/ref/{{ selected_ref.id }}/" method="POST">
             {% csrf_token %}
             <input type="hidden" name="scan-file" value="{{ selected_ref.id }}" />
-            <input type="submit" value="Scan document">
+            <input type="submit" class='btn btn-success btn-sm btn-block' value="Scan document">
+          </form>
+          
+          <br>
+
+          <form action="/ref/{{ selected_ref.id }}/" method="POST">
+            {% csrf_token %}
+            {{ form_update_doi_form }}
+            <input type="submit" class='btn btn-secondary btn-sm' value="Submit">
           </form>
 
           <br>
@@ -69,8 +70,16 @@
           <form action="/ref/{{ selected_ref.id }}/" method="POST">
             {% csrf_token %}
             {{ form_manual_search_form }}
-            <input type="submit" value="Go">
+            <input type="submit" class='btn btn-secondary btn-sm' value="Go">
           </form>
+
+          <br>
+
+          {% if manual_search_isNotValid == True %}
+            <div class="alert alert-danger" role="alert">
+              Error: CrossRef API servers do not send a 200 status code. 
+            </div>
+          {% endif %}
 
           {% for item in manual_search_parsed_items %}
               <br>
@@ -92,9 +101,7 @@
               <br>
               <hr>
             {% endfor %}
-
-          <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
-
+            
         {% endif %}
       {% endif %}
     </div>

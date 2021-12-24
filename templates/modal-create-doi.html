@@ -2,12 +2,14 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalcreateDOI">Add a new entry from its doi</h5>
+          <h5 class="modal-title" id="modalcreateDOI">Create entry</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
+
+          Create new entry from its doi. No file will be added.
           
           {% if form_create_doi_isCreated %}
             <div class="alert alert-success" role="alert">
@@ -30,14 +32,14 @@
           {% endif %}
           {% if form_create_doi_isnotValid %}
             <div class="alert alert-danger" role="alert">
-              Cannot retrive a database for this DOI! Check the DOI validity.
+              Cannot retrive a database for this DOI! Check the DOI validity. (Note that, CrossRef API servers may be down).
             </div>
           {% endif %}
 
           <form action="/" method="post">
             {% csrf_token %}
             {{ form_create_doi_form.as_p }}
-            <input type="submit" value="Submit">
+            <button type="submit" class="btn btn-sm btn-primary mb-2">Submit</button>
           </form>
 
           <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
