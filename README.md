@@ -11,22 +11,21 @@ The open-source reference management software.
 
 ## Installation
 
-You need the last version of Python (check the version with "python3 -V"). Example for the 3.7 : 
+### requirements
+
+You will need the last version of Python, Django, and the lib PyPDF: 
 
 ```bash
 sudo apt-get install python3.7
+sudo apt-get install python3-pypdf2
+pip install Django
 ```
-
-Install Django
-
-```bash
-python -m pip install Django
-```
-or
+<!--or // TODO
 ```bash
 python -m pip install -r requirements.txt
-```
+```-->
 
+### Project
 You can download the git project or directly clone it.
 
 ```bash
@@ -36,20 +35,20 @@ git clone https://github.com/DamienMinenna/OldHara.git
 Finally just launch the server.
 
 ```bash
-python manage.py makemigrations OldHara_app
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
+python manage.py makemigrations OldHara_app && \
+  python manage.py makemigrations && \
+  python manage.py migrate && \
+  python manage.py runserver
 ```
 
-The following message should appear
+The following message should appear:
 
 ```bash
 Django version 3.1.7, using settings 'OldHara.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-Leave open the terminal.
+Leave the terminal open.
 
 Now, you can open *OldHara* using any web browser at the address: http://127.0.0.1:8000/
 
