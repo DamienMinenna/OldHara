@@ -238,7 +238,9 @@ def update_entry_from_crossref_doi(crossrefrequest, doi, selected_ref):
 
         temp["journal"] = ''
         if 'container-title' in data_crossref['message']: 
-            temp["journal"] = str(data_crossref['message']['container-title'][0])
+            if data_crossref['message']['container-title']:
+                temp["journal"] = str(data_crossref['message']['container-title'][0])
+
         
         temp["volume"] = ''
         if 'volume' in data_crossref['message']: 

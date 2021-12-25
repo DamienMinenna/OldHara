@@ -1,6 +1,13 @@
 
 <div>
-  <input type="text" class="form-control form-control-sm" placeholder="Search in app (not actived)" aria-label="Search in app" aria-describedby="btnGroupAddon">
+
+  <form action="/" method="post">
+    {% csrf_token %}
+    {{ form_filter_search_form.as_p }}
+    <!-- <input type="text" name="filter_search_in_refs" class="form-control form-control-sm" placeholder="Search in app" aria-label="Search in app" aria-describedby="btnGroupAddon"> -->
+    <!-- <input type="submit" value="Validate"> -->
+  </form>
+  
 </div>
 
 

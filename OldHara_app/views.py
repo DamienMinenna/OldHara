@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import JsonResponse
 
 from .models import Ref, Folder_Refs, TYPE_REF, MONTH_WORD
-from .forms import form_create_folder, form_create_doi, form_update_doi, form_manual_search
+from .forms import form_create_folder, form_create_doi, form_create_search, form_update_doi, form_manual_search, form_filter_search
 from .crud_folder import create_folder, delete_folder
 from .crud_doi import create_doi, update_doi
 from .crud_entryfile import create_entry_from_dropzone
@@ -33,11 +33,15 @@ def view_home(request):
     form_create_folder_form = form_create_folder()
 
     # Initiate create doi form
+    form_create_doi_form = form_create_doi()#initial = {'folder': Folder_Refs.objects.get(path='unsorted') })
     form_create_doi_isCreated = False
     form_create_doi_isExist = False
     form_create_doi_isnotValid = False
     form_create_doi_isModal = False
-    form_create_doi_form = form_create_doi()#initial = {'folder': Folder_Refs.objects.get(path='unsorted') })
+
+    # Initiate create entry from search
+    form_create_search_form = form_create_search()
+    form_create_search_isModal = False
 
     # Initiate folders
     folders = Folder_Refs.objects.order_by('path')
@@ -46,9 +50,18 @@ def view_home(request):
     filter_selected_folder = -1
     filter_selected_folder_name = "no folder selected"
 
+    # Filter by search
+    form_filter_search_form = form_filter_search()
+
     # Check post
     if request.method == 'POST':
 
+        # Create a new folder
+        if 'nameFolder' in request.POST:
+            form_create_folder_form, form_create_folder_isCreated, form_create_folder_isExist = create_folder(request) # See crud_folder.py
+            form_create_folder_isModal = True
+
+        # Create entry from files
         if 'dropzone_folder' in request.POST: 
 
             isfiledropzoneadded = create_entry_from_dropzone(request)
@@ -57,29 +70,31 @@ def view_home(request):
                 'isfiledropzoneadded' : isfiledropzoneadded,
             })
 
-        # Create folder
-        if 'nameFolder' in request.POST:
-            form_create_folder_form, form_create_folder_isCreated, form_create_folder_isExist = create_folder(request) # See crud_folder.py
-            form_create_folder_isModal = True
-
-        # Create DOI
-        elif 'nameDOI' in request.POST:
+        # Create entry from DOI
+        if 'nameDOI' in request.POST:
             form_create_doi_form, form_create_doi_isCreated, form_create_doi_isExist, form_create_doi_isnotValid = create_doi(request) # See crud_doi.py
             form_create_doi_isModal = True
 
-        else:
-            form_create_folder_form = form_create_folder()
-            form_create_doi_form = form_create_doi()#initial = {'folder': Folder_Refs.objects.get(path='unsorted') })
+        # Create entry from search
+        if 'entry_search' in request.POST:
+            
+            form_create_search_isModal = True
 
         # Filter: selection by folder
         if 'filter_folder' in request.POST:
             filter_selected_folder = request.POST['filter_folder']
-            if filter_selected_folder == -1:
+            if filter_selected_folder == "no folder selected":
                 refs = Ref.objects.order_by('-created_on')
             else:
                 # Only Ref objects filtered
                 refs = Ref.objects.filter(folder = filter_selected_folder).order_by('-created_on')
                 filter_selected_folder_name = Folder_Refs.objects.get(id = filter_selected_folder).path
+
+        elif 'filter_search_in_refs' in request.POST:
+            filter_search = request.POST['filter_search_in_refs']
+            form_filter_search_form = form_filter_search({'filter_search_in_refs': filter_search})
+            refs = Ref.objects.filter(data_text__contains=filter_search).order_by('-created_on')  
+
         else:
             # All Ref objects
             refs = Ref.objects.order_by('-created_on')
@@ -117,6 +132,9 @@ def view_home(request):
     'form_create_doi_isExist': form_create_doi_isExist, # Form for creating an entry from doi: Boolean if doi already exists in database
     'form_create_doi_isnotValid': form_create_doi_isnotValid, # Form for creating an entry from doi: Boolean if doi is not valid
     'form_create_doi_isModal': form_create_doi_isModal, # Form for creating an entry from doi: Boolean if display modal
+    'form_create_search_form': form_create_search_form, # Form for creating an entry from a manual search
+    'form_create_search_isModal': form_create_search_isModal, # Form for creating an entry from a manual search: Boolean if display modal
+    'form_filter_search_form': form_filter_search_form, # Filter from the search bar
     })
 
 def view_ref(request, num=-1):

@@ -78,7 +78,7 @@
             <div class="dropdown-menu">
               <a class="dropdown-item" data-toggle="modal" data-target="#id-modal-create-entry-dropzone"><span class="fas fa-file-upload"></span>&nbsp; Add files</a>
               <a class="dropdown-item" data-toggle="modal" data-target="#id-modal-create-doi"><i class="fas fa-keyboard"></i>&nbsp; Add doi</a>
-              <a class="dropdown-item disabled" href="/"><i class="fab fa-searchengin"></i>&nbsp; Search</a>
+              <a class="dropdown-item" data-toggle="modal" data-target="#id-modal-create-search"><i class="fab fa-searchengin"></i>&nbsp; Search</a>
               <a class="dropdown-item disabled" href="/"><i class="fas fa-pen-alt"></i>&nbsp; Manual new entry</a>
             </div>
           </div>
@@ -111,7 +111,8 @@
 
     {% include "modal-create-folder.html" %}
     {% include "modal-create-entry-dropzone.html" %}
-    {% include "modal-create-doi.html" %}
+    {% include "modal-create-entry-doi.html" %}
+    {% include "modal-create-entry-search.html" %}
     {% include "modal-info.html" %}
     {% include "modal-settings.html" %}
 
@@ -131,6 +132,12 @@
       var modaldoivisible = {{ form_create_doi_isModal|yesno:'true,false' }} ;
       if (modaldoivisible) {
           $('#id-modal-create-doi').modal('show');
+      }
+
+      // Chech if create enttry from search modal must be visible
+      var modalsearchvisible = {{ form_create_search_isModal|yesno:'true,false' }} ;
+      if (modalsearchvisible) {
+          $('#id-modal-create-search').modal('show');
       }
 
       // Get url django to update refs with ajax requests

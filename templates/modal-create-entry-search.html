@@ -1,0 +1,27 @@
+<div class="modal fade" id="id-modal-create-search" tabindex="-1" role="dialog" aria-labelledby="modalcreatesearch" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalcreatesearch">Create entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          
+          <form action="/" method="post">
+            {% csrf_token %}
+            {{ form_create_search_form.as_p }}
+            <button type="submit" class="btn btn-sm btn-primary mb-2">Go</button>
+          </form>
+
+          <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
