@@ -16,13 +16,13 @@
             <button type="submit" class="btn btn-sm btn-primary mb-2">Go</button>
           </form>
 
-          {% if new_entry_search_isNotValid == True %}
+          {% if form_create_search_isNotValid == True %}
             <div class="alert alert-danger" role="alert">
               Error: CrossRef API servers do not send a 200 status code. 
             </div>
           {% endif %}
 
-          {% for item in new_entry_search_parsed_items %}
+          {% for item in form_create_search_parsed_items %}
             <br>
             Title: <b>{{ item.title }}</b>
             <br>
@@ -37,7 +37,7 @@
             <form action="/" method="post">
               {% csrf_token %}
               <input type="hidden" name="entry_DOI" value="{{ item.doi }}">
-              <select name='folder'>
+              <select name='entry_folder'>
               {% for folder in folders %}
                 <option value='{{ folder.id }}'>{{ folder.path }}</option>
               {% endfor %}

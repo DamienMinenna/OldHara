@@ -9,10 +9,10 @@ def query_CrossRef(query):
 
     if crossrefrequest.status_code == 200:
 
-        d = json.loads(crossrefrequest.text)
-        # numberOfItems = int(d['message']['items-per-page'])
+        data_crossref = json.loads(crossrefrequest.text)
+        # numberOfItems = int(data_crossref['message']['items-per-page'])
         
-        for item in d['message']['items']:
+        for item in data_crossref['message']['items']:
             temp = {}
 
             temp['doi'] = item['DOI'].lower()
@@ -42,10 +42,10 @@ def query_CrossRef(query):
 
             parsed_items.append(temp)
 
-        manual_search_isNotValid = False
+        isNotValid = False
     
     else:
-        manual_search_isNotValid = True
+        isNotValid = True
 
-    return parsed_items, manual_search_isNotValid
+    return parsed_items, isNotValid
 

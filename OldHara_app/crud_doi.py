@@ -83,7 +83,8 @@ def create_entry_from_crossref_doi(crossrefrequest, folder, entry_DOI):
 
         temp["journal"] = ''
         if 'container-title' in data_crossref['message']: 
-            temp["journal"] = str(data_crossref['message']['container-title'][0])
+            if data_crossref['message']['container-title']:
+                temp["journal"] = str(data_crossref['message']['container-title'][0])
         
         temp["volume"] = ''
         if 'volume' in data_crossref['message']: 
@@ -136,7 +137,7 @@ def create_doi(request):
     # check whether it's valid:
     if form_create_doi_form.is_valid():
         entry_DOI = str(request.POST['entry_DOI']).lower()
-        folder = request.POST['folder']
+        folder = request.POST['entry_folder']
         refs = Ref.objects.all()
 
         # check if DOI exist
@@ -240,7 +241,6 @@ def update_entry_from_crossref_doi(crossrefrequest, doi, selected_ref):
         if 'container-title' in data_crossref['message']: 
             if data_crossref['message']['container-title']:
                 temp["journal"] = str(data_crossref['message']['container-title'][0])
-
         
         temp["volume"] = ''
         if 'volume' in data_crossref['message']: 
@@ -284,15 +284,15 @@ def update_doi(request,selected_ref):
     """
     Update entry from its doi.
     """
-    doi = request.POST['doi']
+    doi = request.POST['update_doi']
 
     # create a form instance and populate it with data from the request:
-    form_update_doi_form = form_update_doi({'doi': doi})
+    form_update_doi_form = form_update_doi({'update_doi': doi})
     form_update_doi_isUpdated = False
     
     # check whether it's valid:
     if form_update_doi_form.is_valid():
-        doi = str(request.POST['doi']).lower()
+        doi = str(request.POST['update_doi']).lower()
 
         crossrefurl = 'https://api.crossref.org/v1/works/' + doi
         crossrefrequest = requests.get(crossrefurl)

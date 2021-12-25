@@ -375,3 +375,8 @@ body {
     }
   }
   
+
+  form.form-align p {
+    display: grid; 
+    grid-template-columns: 1fr 3fr;
+  }

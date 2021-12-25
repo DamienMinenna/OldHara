@@ -62,7 +62,7 @@
           <form action="/ref/{{ selected_ref.id }}/" method="POST">
             {% csrf_token %}
             {{ form_update_doi_form }}
-            <input type="submit" class='btn btn-secondary btn-sm' value="Submit">
+            <input type="submit" class='btn btn-primary btn-sm' value="Submit">
           </form>
 
           <br>
@@ -95,7 +95,7 @@
             <br>
             <form action="/ref/{{ selected_ref.id }}/" method="post">
               {% csrf_token %}
-              <input type="hidden" name="doi" value="{{ item.doi }}">
+              <input type="hidden" name="update_doi" value="{{ item.doi }}">
               <input type="submit" value="Validate">
             </form>
             <br>

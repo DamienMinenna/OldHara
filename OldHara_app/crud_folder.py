@@ -15,15 +15,15 @@ def create_folder(request):
     # check whether it's valid:
     if form_create_folder_form.is_valid():
 
-        nameFolder = request.POST['nameFolder']
-        path = str('media/') + nameFolder
+        create_folder = request.POST['create_folder']
+        path = str('media/') + create_folder
 
-        if nameFolder == "no folder selected":
+        if create_folder == "no folder selected":
             form_create_folder_isExist = True
         elif not os.path.exists(path):
             os.mkdir(path)
 
-            db = Folder_Refs(path = nameFolder)
+            db = Folder_Refs(path = create_folder)
             db.save()
 
             form_create_folder_isCreated = True
