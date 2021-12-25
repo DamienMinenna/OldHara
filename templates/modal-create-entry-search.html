@@ -16,6 +16,38 @@
             <button type="submit" class="btn btn-sm btn-primary mb-2">Go</button>
           </form>
 
+          {% if new_entry_search_isNotValid == True %}
+            <div class="alert alert-danger" role="alert">
+              Error: CrossRef API servers do not send a 200 status code. 
+            </div>
+          {% endif %}
+
+          {% for item in new_entry_search_parsed_items %}
+            <br>
+            Title: <b>{{ item.title }}</b>
+            <br>
+            Authors: {{ item.authors }}
+            <br>
+            Journal: {{ item.journal }}
+            <br>
+            Date: {{ item.date }}
+            <br>
+            DOI: {{ item.doi }}
+            <br>
+            <form action="/" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="entry_DOI" value="{{ item.doi }}">
+              <select name='folder'>
+              {% for folder in folders %}
+                <option value='{{ folder.id }}'>{{ folder.path }}</option>
+              {% endfor %}
+              </select>
+              <input type="submit" value="Validate">
+            </form>
+            <br>
+            <hr>
+          {% endfor %}
+
           <div style="position: absolute; bottom: 10px; right: 20px;">Database from <a href="https://search.crossref.org/" target="_blank"><img style="height: 20px; margin-top: -5px; margin-left: 5px;" src="//assets.crossref.org/logo/crossref-logo-landscape-200.png"></a></div>
 
         </div>

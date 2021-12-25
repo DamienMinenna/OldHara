@@ -23,14 +23,14 @@ class form_create_doi(forms.Form):
     """
     Form for the creation of a new ref from a DOI.
     """
-    nameDOI = forms.CharField(label='', max_length=1000)
+    entry_DOI = forms.CharField(label='', max_length=1000)
     folder = forms.ModelChoiceField(queryset=Folder_Refs.objects.all(), required=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['nameDOI'].widget.attrs['style'] = 'width:80%; display: inline;'
-        self.fields['nameDOI'].widget.attrs['class'] = 'form-control form-control-sm'
-        self.fields['nameDOI'].widget.attrs['placeholder'] = 'doi'
+        self.fields['entry_DOI'].widget.attrs['style'] = 'width:80%; display: inline;'
+        self.fields['entry_DOI'].widget.attrs['class'] = 'form-control form-control-sm'
+        self.fields['entry_DOI'].widget.attrs['placeholder'] = 'doi'
 
 class form_create_search(forms.Form):
     """

@@ -4,7 +4,7 @@ import requests
 from .models import Ref, Folder_Refs
 from .forms import form_create_doi, form_update_doi
 
-def create_entry_from_crossref_doi(crossrefrequest, folder, nameDOI):
+def create_entry_from_crossref_doi(crossrefrequest, folder, entry_DOI):
     data_crossref = json.loads(crossrefrequest.text)  # .text == <class 'str'>  and d == <class 'dict'>
     title_newentry = str(data_crossref['message']['title'][0])
 
@@ -12,7 +12,7 @@ def create_entry_from_crossref_doi(crossrefrequest, folder, nameDOI):
         title = title_newentry,
         folder = Folder_Refs.objects.get(id = folder),
         status = 0,
-        doi = nameDOI,
+        doi = entry_DOI,
     )
     ref.save()
 
@@ -135,7 +135,7 @@ def create_doi(request):
     
     # check whether it's valid:
     if form_create_doi_form.is_valid():
-        nameDOI = str(request.POST['nameDOI']).lower()
+        entry_DOI = str(request.POST['entry_DOI']).lower()
         folder = request.POST['folder']
         refs = Ref.objects.all()
 
@@ -143,18 +143,18 @@ def create_doi(request):
         for ref_i in refs:
             refidoi = ref_i.doi
 
-            if refidoi == nameDOI:
+            if refidoi == entry_DOI:
                 form_create_doi_isExist = True
 
         if not form_create_doi_isExist:
-                crossrefurl = 'https://api.crossref.org/v1/works/' + nameDOI
+                crossrefurl = 'https://api.crossref.org/v1/works/' + entry_DOI
                 crossrefrequest = requests.get(crossrefurl)
 
                 if crossrefrequest.status_code == 200:
                     form_create_doi_isnotValid = False
                     form_create_doi_isCreated = True
 
-                    create_entry_from_crossref_doi(crossrefrequest, folder, nameDOI)
+                    create_entry_from_crossref_doi(crossrefrequest, folder, entry_DOI)
                     
                 else:
                     form_create_doi_isnotValid = True

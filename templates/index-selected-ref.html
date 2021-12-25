@@ -82,25 +82,25 @@
           {% endif %}
 
           {% for item in manual_search_parsed_items %}
-              <br>
-              Title: <b>{{ item.title }}</b>
-              <br>
-              Authors: {{ item.authors }}
-              <br>
-              Journal: {{ item.journal }}
-              <br>
-              Date: {{ item.date }}
-              <br>
-              DOI: {{ item.doi }}
-              <br>
-              <form action="/ref/{{ selected_ref.id }}/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="doi" value="{{ item.doi }}">
-                <input type="submit" value="Validate">
-              </form>
-              <br>
-              <hr>
-            {% endfor %}
+            <br>
+            Title: <b>{{ item.title }}</b>
+            <br>
+            Authors: {{ item.authors }}
+            <br>
+            Journal: {{ item.journal }}
+            <br>
+            Date: {{ item.date }}
+            <br>
+            DOI: {{ item.doi }}
+            <br>
+            <form action="/ref/{{ selected_ref.id }}/" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="doi" value="{{ item.doi }}">
+              <input type="submit" value="Validate">
+            </form>
+            <br>
+            <hr>
+          {% endfor %}
             
         {% endif %}
       {% endif %}

@@ -42,6 +42,8 @@ def view_home(request):
     # Initiate create entry from search
     form_create_search_form = form_create_search()
     form_create_search_isModal = False
+    new_entry_search_parsed_items = []
+    new_entry_search_isNotValid = False
 
     # Initiate folders
     folders = Folder_Refs.objects.order_by('path')
@@ -71,13 +73,14 @@ def view_home(request):
             })
 
         # Create entry from DOI
-        if 'nameDOI' in request.POST:
+        if 'entry_DOI' in request.POST:
             form_create_doi_form, form_create_doi_isCreated, form_create_doi_isExist, form_create_doi_isnotValid = create_doi(request) # See crud_doi.py
             form_create_doi_isModal = True
 
         # Create entry from search
         if 'entry_search' in request.POST:
-            
+            entry_search = str(request.POST['entry_search'])
+            new_entry_search_parsed_items, new_entry_search_isNotValid = query_CrossRef(entry_search)
             form_create_search_isModal = True
 
         # Filter: selection by folder
@@ -134,6 +137,8 @@ def view_home(request):
     'form_create_doi_isModal': form_create_doi_isModal, # Form for creating an entry from doi: Boolean if display modal
     'form_create_search_form': form_create_search_form, # Form for creating an entry from a manual search
     'form_create_search_isModal': form_create_search_isModal, # Form for creating an entry from a manual search: Boolean if display modal
+    'new_entry_search_parsed_items': new_entry_search_parsed_items, # Form for creating an entry from a manual search: list of item found
+    'new_entry_search_isNotValid': new_entry_search_isNotValid, # Form for creating an entry from a manual search:  Check if the search query return a valid answer
     'form_filter_search_form': form_filter_search_form, # Filter from the search bar
     })
 
