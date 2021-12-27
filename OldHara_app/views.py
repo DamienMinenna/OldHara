@@ -85,8 +85,11 @@ def view_home(request):
 
     folder_list = [x for x in Folder_Refs.objects.values_list('path', flat=True).distinct()]
 
+    selected_ref = refs[0]
+
     return render(request, template_name,
     {
+    'selected_ref': selected_ref, # Selected ref
     'refs' : refs, # List of Ref objects
     'folders': folders, # List of Folder_Refs objects
     'filter_selected_folder': filter_selected_folder, # Filter selected folder id

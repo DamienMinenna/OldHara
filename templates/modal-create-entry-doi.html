@@ -19,13 +19,13 @@
               The entry is created!
               <br>
               <br>
-              Title: <b>{{ refs.0.data.title }}</b>
+              Title: <b>{{ selected_ref.data.title }}</b>
               <br>
-              Authors: {{ refs.0.data.listauthor }}
+              Authors: {{ selected_ref.data.listauthor }}
               <br>
-              Journal: {{ refs.0.data.journal }}
+              Journal: {{ selected_ref.data.journal }}
               <br>
-              Date: {{ refs.0.data.dateD }} {{ refs.0.data.dateMword }} {{ refs.0.data.dateY }}
+              Date: {{ selected_ref.data.dateD }} {{ selected_ref.data.dateMword }} {{ selected_ref.data.dateY }}
             </div>
           {% endif %}
           {% if form_create_doi_isExist %}

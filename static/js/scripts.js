@@ -59,8 +59,13 @@ $("#idtableref").on('click', 'tr', function()  {
     $('#detail_page').html("<div contenteditable='true' id='id-update-page' class='detail-editable'>" + data['page'] + "</div>");
     $('#detail_artnumber').html("<div contenteditable='true' id='id-update-articlenumber' class='detail-editable'>" + data['articlenumber'] + "</div>");
 
-    $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['DOI'] + "'>" + data['DOI'] + "</a>");
-    $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['DOI'] + " class='altmetric-embed'></div>");
+    if (!(data['DOI'] === '')) {
+        $('#detail_doi').html("<a target='_blank' href='https://doi.org/" + data['DOI'] + "'>" + data['DOI'] + "</a>");
+        $('#detail_badgedimension').html("<span class='__dimensions_badge_embed__' data-doi=" + data['DOI'] + " data-style='small_rectangle'></span>" + "<div data-badge-popover='left' data-link-target='_blank' data-hide-no-mentions='true' data-doi=" + data['DOI'] + " class='altmetric-embed'></div>");
+    } else {
+        $('#detail_doi').html("");
+        $('#detail_badgedimension').html("");
+    }
     
     $('#detail_delete').html("<button type='button' class='btn btn-danger btn-sm mb-2' id='id-delete-ref'><span class='fas fa-trash-alt'></span></button>");
 
@@ -410,334 +415,342 @@ $("#id-progress-pdf").fadeOut().empty();
 }
 
 
-// GET data (full JSON of the ref)
-var data = $("#id-data-selected-ref").text();
-data = JSON.parse(data)
+try {
+    // GET data (full JSON of the ref)
+    var data = $("#id-data-selected-ref").text();
+    data = JSON.parse(data)
 
-// Update Title (Selected ref)
-document.getElementById("id-update-selected-title").addEventListener("input", function() {
-    var newtitle = $('#id-update-selected-title').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'title': newtitle,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-}, false);
-
-// Update authors (Selected ref)
-document.getElementById("id-update-selected-authors").addEventListener("input", function() {
-    var newauthors = $('#id-update-selected-authors').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'listauthor': newauthors,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update journal (Selected ref)
-document.getElementById("id-update-selected-journal").addEventListener("input", function() {
-    var newjournal = $('#id-update-selected-journal').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'journal': newjournal,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update volume (Selected ref)
-document.getElementById("id-update-selected-volume").addEventListener("input", function() {
-    var newvolume = $('#id-update-selected-volume').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'volume': newvolume,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update Issue (Selected ref)
-document.getElementById("id-update-selected-issue").addEventListener("input", function() {
-    var newissue = $('#id-update-selected-issue').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'issue': newissue,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update Page
-document.getElementById("id-update-selected-page").addEventListener("input", function() {
-    var newpage = $('#id-update-selected-page').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'page': newpage,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update Article number (Selected ref)
-document.getElementById("id-update-selected-articlenumber").addEventListener("input", function() {
-    var newarticlenumber = $('#id-update-selected-articlenumber').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'articlenumber': newarticlenumber,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            // let html_table;
-            // html_table = edit_table(responseData);
-            // $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update dateD (Selected ref)
-document.getElementById("id-update-selected-dateD").addEventListener("input", function() {
-    var newdate = $('#id-update-selected-dateD').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'dateD': newdate,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            let html_table;
-            html_table = edit_table(responseData);
-            $("#listRef_"+data['id']).html(html_table);
-        }
-    });
-
-}, false);
-
-// Update dateM (Selected ref)
-$( "#id-update-selected-dateM" ).one( "click", function() {
-    let html_dateMlist;
-
-    html_dateMlist = "<form action='' method='POST' id='id-selection-dateM_form'>"
-        + csrf_token_folder
-        + "<select id='id-update-dateM_from_form' name='dateMword' onchange='this.form.submit()'>"
-        + "<option value='" + data['dateMword'] + "'>" + data['dateMword'] + "</option>";
-    
-    for(i = 0; i < month_word.length; i++){
-        if(!(month_word[i] == data['dateMword'])){
-            html_dateMlist += "<option value='" + month_word[i] + "'>" + month_word[i] + "</option>"
-        }
-    };
-
-    html_dateMlist += "</select></form>"
-    $("#id-update-selected-dateM").html(html_dateMlist);
-
-    $(document).ready(function(e) {
-        $("[name='dateMword']").on('change', function() {
-            $.ajax({
-                synch: 'true',
-                type: "POST",
-                url: url_update_ref,
-                data: {
-                    'id': data['id'],
-                    'dateMword': $("#id-update-dateM_from_form").val()
-                },
-                dataType: 'json',
-                success: function(responseData) {
-                    let html_table;
-                    html_table = edit_table(responseData);
-                    $("#listRef_"+data['id']).html(html_table);
-                }
-            });
-            return false;
+    // Update Title (Selected ref)
+    document.getElementById("id-update-selected-title").addEventListener("input", function() {
+        var newtitle = $('#id-update-selected-title').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'title': newtitle,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
         });
     }, false);
-});
 
-// Update dateY (Selected ref)
-document.getElementById("id-update-selected-dateY").addEventListener("input", function() {
-    var newdate = $('#id-update-selected-dateY').html();
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'dateY': newdate,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            let html_table;
-            html_table = edit_table(responseData);
-            $("#listRef_"+data['id']).html(html_table);
-        }
+    // Update authors (Selected ref)
+    document.getElementById("id-update-selected-authors").addEventListener("input", function() {
+        var newauthors = $('#id-update-selected-authors').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'listauthor': newauthors,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update journal (Selected ref)
+    document.getElementById("id-update-selected-journal").addEventListener("input", function() {
+        var newjournal = $('#id-update-selected-journal').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'journal': newjournal,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update volume (Selected ref)
+    document.getElementById("id-update-selected-volume").addEventListener("input", function() {
+        var newvolume = $('#id-update-selected-volume').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'volume': newvolume,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update Issue (Selected ref)
+    document.getElementById("id-update-selected-issue").addEventListener("input", function() {
+        var newissue = $('#id-update-selected-issue').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'issue': newissue,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update Page
+    document.getElementById("id-update-selected-page").addEventListener("input", function() {
+        var newpage = $('#id-update-selected-page').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'page': newpage,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update Article number (Selected ref)
+    document.getElementById("id-update-selected-articlenumber").addEventListener("input", function() {
+        var newarticlenumber = $('#id-update-selected-articlenumber').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'articlenumber': newarticlenumber,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                // let html_table;
+                // html_table = edit_table(responseData);
+                // $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update dateD (Selected ref)
+    document.getElementById("id-update-selected-dateD").addEventListener("input", function() {
+        var newdate = $('#id-update-selected-dateD').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'dateD': newdate,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                let html_table;
+                html_table = edit_table(responseData);
+                $("#listRef_"+data['id']).html(html_table);
+            }
+        });
+
+    }, false);
+
+    // Update dateM (Selected ref)
+    $( "#id-update-selected-dateM" ).one( "click", function() {
+        let html_dateMlist;
+
+        html_dateMlist = "<form action='' method='POST' id='id-selection-dateM_form'>"
+            + csrf_token_folder
+            + "<select id='id-update-dateM_from_form' name='dateMword' onchange='this.form.submit()'>"
+            + "<option value='" + data['dateMword'] + "'>" + data['dateMword'] + "</option>";
+        
+        for(i = 0; i < month_word.length; i++){
+            if(!(month_word[i] == data['dateMword'])){
+                html_dateMlist += "<option value='" + month_word[i] + "'>" + month_word[i] + "</option>"
+            }
+        };
+
+        html_dateMlist += "</select></form>"
+        $("#id-update-selected-dateM").html(html_dateMlist);
+
+        $(document).ready(function(e) {
+            $("[name='dateMword']").on('change', function() {
+                $.ajax({
+                    synch: 'true',
+                    type: "POST",
+                    url: url_update_ref,
+                    data: {
+                        'id': data['id'],
+                        'dateMword': $("#id-update-dateM_from_form").val()
+                    },
+                    dataType: 'json',
+                    success: function(responseData) {
+                        let html_table;
+                        html_table = edit_table(responseData);
+                        $("#listRef_"+data['id']).html(html_table);
+                    }
+                });
+                return false;
+            });
+        }, false);
     });
 
-}, false);
-
-
-// Update Folder (Selected ref)
-$( "#id-update-selected-folder" ).one( "click", function() {
-    let html_folderlist;
-
-    html_folderlist = "<form action='' method='POST' id='id-selection-folder_form'>"
-        + csrf_token_folder
-        + "<select id='id-update-folder_from_form' name='folder' onchange='this.form.submit()'>"
-        + "<option value='" + data['folder'] + "'>" + data['folder'] + "</option>";
-    
-    for(i = 0; i < folder_list.length; i++){
-        if(!(folder_list[i] == data['folder'])){
-            html_folderlist += "<option value='" + folder_list[i] + "'>" + folder_list[i] + "</option>"
-        }
-    };
-
-    html_folderlist += "</select></form>"
-    $("#id-update-selected-folder").html(html_folderlist);
-
-    $(document).ready(function(e) {
-        $("[name='folder']").on('change', function() {
-            $.ajax({
-                synch: 'true',
-                type: "POST",
-                url: url_update_ref,
-                data: {
-                    'id': data['id'],
-                    'folder': $("#id-update-folder_from_form").val()
-                },
-                dataType: 'json',
-                success: function(responseData) {
-                    let html_table;
-                    html_table = edit_table(responseData);
-                    $("#listRef_"+data['id']).html(html_table);
-                }
-            });
-            return false;
+    // Update dateY (Selected ref)
+    document.getElementById("id-update-selected-dateY").addEventListener("input", function() {
+        var newdate = $('#id-update-selected-dateY').html();
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'dateY': newdate,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                let html_table;
+                html_table = edit_table(responseData);
+                $("#listRef_"+data['id']).html(html_table);
+            }
         });
+
     }, false);
-});
 
 
-// Update type (Selected ref)
-$( "#id-update-selected-type" ).one( "click", function() {
-    let html_typelist;
+    // Update Folder (Selected ref)
+    $( "#id-update-selected-folder" ).one( "click", function() {
+        let html_folderlist;
 
-    html_typelist = "<form action='' method='POST' id='id-selection-type_form'>"
-        + csrf_token_folder
-        + "<select id='id-update-type_from_form' name='type' onchange='this.form.submit()'>"
-        + "<option value='" + data['foltypeder'] + "'>" + data['type'] + "</option>";
-    
-    for(i = 0; i < type_ref.length; i++){
-        if(!(type_ref[i] == data['type'])){
-            html_typelist += "<option value='" + type_ref[i] + "'>" + type_ref[i] + "</option>"
-        }
-    };
+        html_folderlist = "<form action='' method='POST' id='id-selection-folder_form'>"
+            + csrf_token_folder
+            + "<select id='id-update-folder_from_form' name='folder' onchange='this.form.submit()'>"
+            + "<option value='" + data['folder'] + "'>" + data['folder'] + "</option>";
+        
+        for(i = 0; i < folder_list.length; i++){
+            if(!(folder_list[i] == data['folder'])){
+                html_folderlist += "<option value='" + folder_list[i] + "'>" + folder_list[i] + "</option>"
+            }
+        };
 
-    html_typelist += "</select></form>"
-    $("#id-update-selected-type").html(html_typelist);
+        html_folderlist += "</select></form>"
+        $("#id-update-selected-folder").html(html_folderlist);
 
-    $(document).ready(function(e) {
-        $("[name='type']").on('change', function() {
-            $.ajax({
-                synch: 'true',
-                type: "POST",
-                url: url_update_ref,
-                data: {
-                    'id': data['id'],
-                    'type': $("#id-update-type_from_form").val()
-                },
-                dataType: 'json',
-                success: function(responseData) {
-                    let html_table;
-                    html_table = edit_table(responseData);
-                    $("#listRef_"+data['id']).html(html_table);
-                }
+        $(document).ready(function(e) {
+            $("[name='folder']").on('change', function() {
+                $.ajax({
+                    synch: 'true',
+                    type: "POST",
+                    url: url_update_ref,
+                    data: {
+                        'id': data['id'],
+                        'folder': $("#id-update-folder_from_form").val()
+                    },
+                    dataType: 'json',
+                    success: function(responseData) {
+                        let html_table;
+                        html_table = edit_table(responseData);
+                        $("#listRef_"+data['id']).html(html_table);
+                    }
+                });
+                return false;
             });
-            return false;
-        });
-    }, false);
-});
-
-// Delete ref (Selected ref)
-document.getElementById("id-delete-selected-ref").addEventListener("click", function() {
-    var delete_ref = true;
-    $.ajax({
-        synch: 'true',
-        url: url_update_ref,
-        type: 'POST',
-        data: {
-            'id': data['id'],
-            'delete_ref': delete_ref,
-        },
-        dataType: 'json',
-        success: function (responseData) {
-            window.location.replace('/');
-        }
+        }, false);
     });
-}, false);
+
+
+    // Update type (Selected ref)
+    $( "#id-update-selected-type" ).one( "click", function() {
+        let html_typelist;
+
+        html_typelist = "<form action='' method='POST' id='id-selection-type_form'>"
+            + csrf_token_folder
+            + "<select id='id-update-type_from_form' name='type' onchange='this.form.submit()'>"
+            + "<option value='" + data['foltypeder'] + "'>" + data['type'] + "</option>";
+        
+        for(i = 0; i < type_ref.length; i++){
+            if(!(type_ref[i] == data['type'])){
+                html_typelist += "<option value='" + type_ref[i] + "'>" + type_ref[i] + "</option>"
+            }
+        };
+
+        html_typelist += "</select></form>"
+        $("#id-update-selected-type").html(html_typelist);
+
+        $(document).ready(function(e) {
+            $("[name='type']").on('change', function() {
+                $.ajax({
+                    synch: 'true',
+                    type: "POST",
+                    url: url_update_ref,
+                    data: {
+                        'id': data['id'],
+                        'type': $("#id-update-type_from_form").val()
+                    },
+                    dataType: 'json',
+                    success: function(responseData) {
+                        let html_table;
+                        html_table = edit_table(responseData);
+                        $("#listRef_"+data['id']).html(html_table);
+                    }
+                });
+                return false;
+            });
+        }, false);
+    });
+
+    // Delete ref (Selected ref)
+    document.getElementById("id-delete-selected-ref").addEventListener("click", function() {
+        var delete_ref = true;
+        $.ajax({
+            synch: 'true',
+            url: url_update_ref,
+            type: 'POST',
+            data: {
+                'id': data['id'],
+                'delete_ref': delete_ref,
+            },
+            dataType: 'json',
+            success: function (responseData) {
+                window.location.replace('/');
+            }
+        });
+    }, false);
+
+
+
+} catch (error) {
+
+}
+  
