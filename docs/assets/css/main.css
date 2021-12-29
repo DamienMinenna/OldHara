@@ -15,7 +15,7 @@ body {
   text-align: center;
 }
 
-.titlefont{
+titlefont{
     color: #d2d2d2;
     font-family: 'Lora', serif;
     font-size: 17px;
@@ -23,17 +23,17 @@ body {
     transition: transform 500ms;
 }
 
-.titlefont:hover{
+titlefont:hover{
     color: #fdfcfc;
     transform: translateX(5px);
 }
 
-.titlefont:focus{
+titlefont:focus{
     color: #fdfcfc;
     transform: translateX(5px);
 }
 
-.subtitlefont{
+subtitlefont{
     color: #d2d2d2;
     font-family: 'Lora', serif;
     font-size: 15px;
