@@ -1,0 +1,19 @@
+div.scroll-reveal-item {
+  position: sticky;
+  top: 10px;
+  /* opacity: 0.5; */
+}
+div.scroll-reveal-item img {
+  filter: drop-shadow(0 -10px 2rem var(--dark));
+}
+div.scroll-reveal-item p {
+  margin-top: 60px;
+  background-color: var(--dark);
+}
+div.scroll-reveal-item:hover p {
+  font-weight: bold;
+}
+/* div.scroll-revealed {
+  opacity: 1;
+  transition: opacity 1s;
+} */

@@ -1,0 +1,77 @@
+:root {
+  --dark: rgb(31, 48, 85);
+  --light: rgb(226, 210, 183);
+  --accent: rgb(221, 208, 28);
+  --accent-dark: rgb(9, 89, 155);
+}
+
+body {
+  margin: 0;
+  font-size: 24px;
+
+  background: var(--dark);
+  color: var(--light);
+  font-family: sans-serif;
+  text-align: center;
+}
+
+/* =======================================================
+                            LAYOUT
+ ======================================================= */
+
+main section {
+  padding: 30px;
+  min-height: 50vh;
+  vertical-align: center;
+}
+
+nav {
+  padding: 20px;
+  margin: 0;
+  background: var(--dark);
+}
+/* =======================================================
+                            TYPO
+ ======================================================= */
+
+/* =======================================================
+                            COLORS
+ ======================================================= */
+
+h2.title {
+  font-size: 56px;
+  color: var(--accent);
+}
+
+section:nth-child(even) {
+  background: var(--light);
+  color: var(--dark);
+}
+
+a {
+  color: var(--accent-dark);
+}
+a:hover {
+  text-decoration: none;
+}
+/* =======================================================
+                            GRID
+ ======================================================= */
+
+.col {
+  display: grid;
+  margin: 10px 0;
+}
+.col-left {
+  grid-template-columns: 3fr 1fr;
+}
+.col-right {
+  grid-template-columns: 1fr 3fr;
+}
+.col-center {
+  grid-template-columns: 1fr 1fr;
+}
+
+img {
+  max-width: 90%;
+}

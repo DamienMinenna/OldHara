@@ -1,0 +1,8 @@
+img {
+  filter: brightness(0.75) contrast(1) sepia(0.7) hue-rotate(-5deg) saturate(2);
+  transition: filter 1s;
+}
+img:hover {
+  filter: none;
+  transition: filter 1s;
+}

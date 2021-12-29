@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Old Hara – Open-source reference management software</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/img.css" />
+    <link rel="stylesheet" href="assets/css/scroll-reveal.css" />
+</head>
+
+<body>
+
+    <nav>
+        <h1> <a href="/OldHara"></a>OldHara</h1>
+
+        <h2 class='title'>
+            The open-source <br>reference <br>management software.
+        </h2>
+    </nav>
+
+
+    <main>
+
+        <section>
+
+            <h2>Installation</h2>
+
+            <h3>requirements</h3>
+
+            You will need the last version of Python, Django, and the lib PyPDF:
+            <pre><code>
+                sudo apt-get install python3.7
+                sudo apt-get install python3-pypdf2
+                pip install Django
+            </code></pre>
+
+            Project
+
+            You can download the git project or directly clone it.
+
+            <pre><code>
+                git clone https://github.com/DamienMinenna/OldHara.git
+            </code></pre>
+
+            Finally just launch the server.
+
+            <pre><code>
+                python manage.py makemigrations OldHara_app && \
+                python manage.py makemigrations && \
+                python manage.py migrate && \
+                python manage.py runserver
+            </code></pre>
+
+            The following message should appear:
+
+            <pre><code>
+                Django version 3.1.7, using settings 'OldHara.settings'
+                Starting development server at http://127.0.0.1:8000/
+                Quit the server with CONTROL-C.
+            </code></pre>
+
+            Leave the terminal open.
+
+            Now, you can open OldHara using any web browser at the address: <a href="">http://127.0.0.1:8000/</a>
+
+        </section>
+
+    </main>
+
+
+
+</body>
+
+</html>
