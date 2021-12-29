@@ -3,6 +3,13 @@
 
 <head>
     <title>Old Hara – Open-source reference management software</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap" rel="stylesheet">
+    <meta name="google" content="notranslate" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
@@ -13,11 +20,15 @@
 <body>
 
     <nav>
-        <h1> <a href="/OldHara"></a>OldHara</h1>
+        <div class="col">
 
-        <h2 class='title'>
-            The open-source <br>reference <br>management software.
-        </h2>
+          <a class="navbar-brand text-white" href="/">
+            <span class="titlefont"> 
+            <img src="{% static '/img/logo.png' %}" alt="" width="15">Old Hara </span>
+          </a>
+          <span class="subtitlefont"> The open-source reference management software </span>
+
+        </div>
     </nav>
 
     <main>
