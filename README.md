@@ -7,6 +7,8 @@
 The open-source reference management software.
 *OldHara* is a web application to manage large number of scientific articles and books.
 
+See [the presentation website](https://damienminenna.github.io/OldHara/).
+
 
 
 ## Installation
