@@ -1,0 +1,24 @@
+
+.titlefont{
+    /* color: #d2d2d2; */
+    font-family: 'Lora', serif;
+    /* font-size: 17px; */
+    transition: transform 500ms;
+}
+
+.titlefont:hover{
+    /* color: #fdfcfc; */
+    transform: translateX(5px);
+}
+
+.titlefont:focus{
+    /* color: #fdfcfc; */
+    transform: translateX(5px);
+}
+
+.subtitlefont{
+    /* color: #d2d2d2; */
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    padding-left: 20px;
+}
